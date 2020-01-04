@@ -1,0 +1,33 @@
+$font-path: './assets/fonts';
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url($font-path + 'Quicksand-Light.ttf') format('truetype'),
+    url($font-path + 'Quicksand-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url($font-path + 'Quicksand-Regular.ttf') format('truetype'),
+    url($font-path + 'Quicksand-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url($font-path + 'Quicksand-Medium.ttf') format('truetype'),
+    url($font-path + 'Quicksand-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Quicksand';
+    src: url($font-path + 'Quicksand-Bold.ttf') format('truetype'),
+    url($font-path + 'Quicksand-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}

@@ -1,0 +1,20 @@
+/* Typography */
+$default-font: 'Quicksand';
+
+/* Colors */
+$white: #fff;
+
+$light-grey: #fafafa;
+$dark-grey: #313131;
+$grey: transparentize($dark-grey, 0.27);
+$blue-grey: #78919f;
+
+$dark-blue: #153276;
+$blue: #27AAF0;
+
+$black: #000;
+$red: #A50104;
+
+/* Shadows */
+$sidebar-shadow: 0px 2px 10px rgba(0, 0, 0, 0.05);
+$card-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
