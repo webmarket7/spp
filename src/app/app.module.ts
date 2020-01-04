@@ -6,15 +6,16 @@ import { AppComponent } from './app.component';
 import { SppIconComponent } from './spp-icon/spp-icon.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    SppIconComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        SppIconComponent
+    ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
