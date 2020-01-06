@@ -12,6 +12,7 @@ import { SppIconModule } from '../shared/ui/spp-icon/spp-icon.module';
 import { SppSidebarSectionModule } from '../shared/ui/spp-sidebar-section/spp-sidebar-section.module';
 import { SppUserModule } from '../shared/ui/spp-user/spp-user.module';
 import { SppMenuItemModule } from '../shared/ui/spp-menu-item/spp-menu-item.module';
+import { SppSidebarPortalModule } from '../shared/ui/spp-sidebar-portal/spp-sidebar-portal.module';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { SppMenuItemModule } from '../shared/ui/spp-menu-item/spp-menu-item.modu
         CommonModule,
         ContentsRoutingModule,
         SppIconModule,
+        SppSidebarPortalModule,
         SppSidebarSectionModule,
         SppUserModule,
         SppMenuItemModule
