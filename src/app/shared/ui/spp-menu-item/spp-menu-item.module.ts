@@ -1,23 +1,21 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SppUserPicComponent } from './spp-user-pic/spp-user-pic.component';
-import { UserNamePipe } from './pipes/user-name.pipe';
+import { SppMenuItemComponent } from './spp-menu-item.component';
 import { SppIconModule } from '../spp-icon/spp-icon.module';
 
 
 @NgModule({
     declarations: [
-        SppUserPicComponent,
-        UserNamePipe
+        SppMenuItemComponent
     ],
     imports: [
         CommonModule,
         SppIconModule
     ],
     exports: [
-        SppUserPicComponent,
-        UserNamePipe
-    ]
+        SppMenuItemComponent
+    ],
+
 })
-export class SppUserModule {
+export class SppMenuItemModule {
 }

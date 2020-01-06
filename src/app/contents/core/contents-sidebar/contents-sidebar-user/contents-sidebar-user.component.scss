@@ -1,0 +1,42 @@
+@import 'abstracts/var';
+@import 'abstracts/extends';
+
+$pic-size: 40px;
+$pic-margin: 16px;
+
+:host {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+}
+
+a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 16px;
+    cursor: pointer;
+
+    &.active {
+        background-color: $blue;
+        color: $white;
+    }
+
+    &:not(.active) {
+        &:hover {
+            background-color: transparentize($dark-grey, 0.9);
+        }
+    }
+
+    > span {
+        @extend %text-ellipsis;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 1.5;
+        color: $grey;
+        margin-left: $pic-margin;
+        max-width: calc(100% - #{$pic-size + $pic-margin});
+    }
+}
