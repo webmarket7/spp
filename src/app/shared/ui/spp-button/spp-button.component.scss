@@ -1,4 +1,4 @@
-@import '../../../scss/abstracts/var';
+@import 'abstracts/var';
 
 :host {
     height: 40px;
@@ -42,13 +42,10 @@
         display: flex;
         align-content: center;
         justify-content: center;
-
-        > span {
-            color: inherit;
-            font-weight: 500;
-            font-size: 14px;
-            line-height: 24px;
-            text-transform: uppercase;
-        }
+        color: inherit;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 24px;
+        text-transform: uppercase;
     }
 }
