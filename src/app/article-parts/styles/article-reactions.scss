@@ -1,0 +1,46 @@
+@import 'abstracts/var';
+
+$reaction-default-color: $grey;
+$reaction-hover-color: $blue;
+$reaction-active-color: $blue;
+
+:host {
+    display: flex;
+    align-items: center;
+
+    spp-icon {
+        width: 20px;
+        height: 20px;
+        fill: $reaction-default-color;
+    }
+
+    span {
+        color: $reaction-default-color;
+    }
+
+    &:hover,
+    &:active,
+    &.active {
+        cursor: pointer;
+
+        spp-icon {
+            fill: $reaction-hover-color;
+        }
+
+        span {
+            color: $reaction-hover-color;
+        }
+    }
+}
+
+button {
+    height: 20px;
+}
+
+span {
+    margin-left: 4px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1.25;
+}

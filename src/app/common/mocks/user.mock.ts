@@ -1,6 +1,6 @@
-import { UserRole } from '../models/user.interface';
+import { User, UserRole } from '../models/user.interface';
 
-export class User {
+export class UserMock implements User {
     id: 'a123ads12';
     username = 'test@test.com';
     role: UserRole = 'student';
@@ -11,7 +11,7 @@ export class User {
     updatedAt: Date = new Date();
     lastLogin: Date = new Date();
 
-    constructor(firstName?: string, lastName?: string, picture?: string) {
+    constructor(picture?: string, firstName?: string, lastName?: string) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.picture = picture;

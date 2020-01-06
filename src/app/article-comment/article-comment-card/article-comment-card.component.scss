@@ -1,0 +1,83 @@
+@import 'abstracts/var';
+
+:host {
+    display: block;
+    padding: 24px;
+    background-color: $white;
+    box-shadow: $card-shadow;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .article-comment-card__header-block {
+        &:first-child {
+            flex: 1;
+        }
+
+        &:last-child {
+            max-width: 24px;
+            max-height: 24px;
+
+            button {
+                fill: $grey;
+            }
+        }
+    }
+}
+
+section {
+    position: relative;
+    margin-top: 12px;
+    font-size: 18px;
+    line-height: 1.5;
+    color: $dark-grey;
+    hyphens: auto;
+    word-break: break-word;
+
+    &.expanded {
+        overflow: initial;
+        max-height: none;
+    }
+
+    &.collapsed {
+        max-height: 110px;
+        overflow: hidden;
+
+        &.overflown {
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 55px;
+                background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, $white 88.02%);
+            }
+        }
+    }
+}
+
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    width: 100%;
+
+    > button {
+        color: $blue;
+        font-size: 14px;
+        line-height: 17px;
+    }
+
+    > span {
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 20px;
+        color: $grey;
+    }
+}

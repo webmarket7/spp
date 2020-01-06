@@ -1,1 +1,107 @@
-<router-outlet></router-outlet>
+<section>
+    <h1>User picture component</h1>
+
+    <article>
+        <section>
+            <h3>Filter by Author</h3>
+            <div>
+                <spp-user-pic [picture]='scarceUser.picture' containerSize=24 iconSize=18 [edge]='false'></spp-user-pic>
+            </div>
+            <div>
+                <spp-user-pic [picture]='fullUser.picture' containerSize=24 iconSize=18 [edge]='false'></spp-user-pic>
+            </div>
+        </section>
+
+        <section>
+            <h3>Comment card/form</h3>
+            <div>
+                <spp-user-pic [picture]='scarceUser.picture' containerSize=36></spp-user-pic>
+            </div>
+            <div>
+                <spp-user-pic [picture]='fullUser.picture' containerSize=36></spp-user-pic>
+            </div>
+        </section>
+
+        <section>
+            <h3>Sidebar/article card</h3>
+            <div>
+                <spp-user-pic [picture]='scarceUser.picture'></spp-user-pic>
+            </div>
+            <div>
+                <spp-user-pic [picture]='fullUser.picture'></spp-user-pic>
+            </div>
+            <div></div>
+        </section>
+
+        <section>
+            <h3>Article page</h3>
+            <div>
+                <spp-user-pic [picture]='scarceUser.picture' containerSize=48></spp-user-pic>
+            </div>
+            <div>
+                <spp-user-pic [picture]='fullUser.picture' containerSize=48></spp-user-pic>
+            </div>
+        </section>
+
+        <section>
+            <h3>Edit profile popup</h3>
+            <div>
+                <button>
+                    <spp-user-pic containerSize=96
+                                  icon='camera'
+                                  iconSize=36
+                                  [edge]='false'
+                    ></spp-user-pic>
+                </button>
+            </div>
+            <div>
+                <div class='edit-profile__user-wrapper'>
+                    <spp-user-pic [picture]='fullUser.picture'
+                                  containerSize=96
+                                  icon='camera'
+                                  iconSize=36
+                                  [edge]='false'
+                    ></spp-user-pic>
+                    <button>
+                        <spp-user-pic containerSize=40
+                                      icon='camera'
+                                      iconSize=18
+                                      [edge]='false'
+                        ></spp-user-pic>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3>Profile page</h3>
+            <div>
+                <spp-user-pic [picture]='scarceUser.picture' containerSize=128 iconSize=64 [edge]='false'></spp-user-pic>
+            </div>
+            <div>
+                <spp-user-pic [picture]='fullUser.picture' containerSize=128 iconSize=64 [edge]='false'></spp-user-pic>
+            </div>
+        </section>
+    </article>
+</section>
+
+<section>
+    <h1>Article card component</h1>
+    <div class='feed-item' *ngFor='let article of articles; trackBy: articleTrackByFn'>
+        <article-card [article]='article'></article-card>
+    </div>
+</section>
+
+<section>
+    <h1>Article comment editor</h1>
+    <div class='comment-editor'>
+        <article-comment-editor
+            [expanded]='true'
+            (save)='createComment($event)'
+        ></article-comment-editor>
+    </div>
+
+    <div class='comment-card' *ngFor='let comment of comments; trackBy: commentTrackByFn'>
+        <article-comment-card [comment]='comment'></article-comment-card>
+    </div>
+</section>
