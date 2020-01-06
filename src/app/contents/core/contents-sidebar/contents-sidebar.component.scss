@@ -1,0 +1,12 @@
+@import 'abstracts/var';
+
+:host {
+    display: block;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 240px;
+    background-color: $white;
+    box-shadow: $sidebar-shadow;
+}
