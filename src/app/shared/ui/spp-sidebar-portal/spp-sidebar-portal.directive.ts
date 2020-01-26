@@ -1,6 +1,5 @@
 import { Directive, NgZone, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { SppSidebarPortalService } from './spp-sidebar-portal.service';
-import { take } from 'rxjs/operators';
 
 @Directive({
     selector: '[sidebarPortal]'
@@ -14,11 +13,7 @@ export class SppSidebarPortalDirective implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.ngZone.onStable.pipe(take(1)).subscribe(() => {
-            this.ngZone.run(() => {
-                this.sidebarPortalService.projectInPortal(this.templateRef);
-            });
-        });
+        this.sidebarPortalService.projectInPortal(this.templateRef);
     }
 
     ngOnDestroy(): void {
