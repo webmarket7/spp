@@ -1,0 +1,15 @@
+<ng-container *sidebarPortal>
+    <spp-sidebar-section header='Views'>
+        <spp-views [views]='views'></spp-views>
+    </spp-sidebar-section>
+</ng-container>
+
+<spp-page-layout>
+    <router-outlet></router-outlet>
+    <div class='articles-feed__paginator'>
+        <button spp-button class='filled'>
+            <spp-icon icon='download-cloud'></spp-icon>
+            <span>Load more</span>
+        </button>
+    </div>
+</spp-page-layout>

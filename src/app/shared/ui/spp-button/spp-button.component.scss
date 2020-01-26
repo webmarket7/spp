@@ -1,0 +1,51 @@
+@import 'abstracts/var';
+
+:host {
+    height: 40px;
+    width: 100%;
+    padding: 0 20px;
+    border-radius: 20px;
+
+    &.filled {
+        background-color: $blue;
+        color: $white;
+        fill: $white;
+
+        &:hover {
+            background-color: darken($blue, 15%);
+        }
+
+        &:disabled {
+            background-color: transparentize(desaturate($blue, 70%), 0.4);
+            color: transparentize($white, 0.4);
+            fill: transparentize($white, 0.4);
+        }
+    }
+
+    &.outlined {
+        border: 1px solid $blue;
+        color: $blue;
+        fill: $blue;
+        background-color: transparent;
+
+        &:hover {
+            color: $white;
+            fill: $white;
+            background-color: $blue;
+        }
+    }
+}
+
+.spp-button {
+    &__wrap {
+        width: 100%;
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        color: inherit;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 24px;
+        text-transform: uppercase;
+    }
+}

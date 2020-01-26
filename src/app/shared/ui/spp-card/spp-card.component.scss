@@ -1,0 +1,8 @@
+@import 'abstracts/var';
+
+:host {
+    display: block;
+    background-color: $white;
+    box-shadow: $card-shadow;
+    width: 100%;
+}
