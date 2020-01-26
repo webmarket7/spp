@@ -1,7 +1,7 @@
 import { User, UserRole } from '../models/user.interface';
 
 export class UserMock implements User {
-    id: 'a123ads12';
+    id = 'a123ads12';
     username = 'test@test.com';
     role: UserRole = 'student';
     firstName: string;
