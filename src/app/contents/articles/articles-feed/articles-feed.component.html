@@ -54,7 +54,10 @@
                     [dataSource]='users'
         >
             <ng-template let-user>
-                <spp-user-pic [picture]='user?.picture'></spp-user-pic>
+                <div class='user-list-item'>
+                    <spp-user-pic [picture]='user?.picture' containerSize=24 iconSize=18></spp-user-pic>
+                    <span class='user-list-item__name'>{{ user | userName }}</span>
+                </div>
             </ng-template>
         </spp-filter>
 

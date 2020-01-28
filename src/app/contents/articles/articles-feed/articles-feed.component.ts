@@ -8,6 +8,8 @@ import { Observable, Subscription, SubscriptionLike } from 'rxjs';
 import { ArticleParams } from '../../../common/models/article-params.interface';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { normalizeQueryParam } from '../../../common/helpers';
+import { articleAuthorsMock } from '../../../common/mocks/article-authors.mock';
+import { articleTagsMock } from '../../../common/mocks/article-tags.mock';
 
 
 @Component({
@@ -21,8 +23,8 @@ export class ArticlesFeedComponent implements OnInit, OnDestroy {
     private queryParamsSubscription: SubscriptionLike = Subscription.EMPTY;
 
     category: 'all' | 'liked' | 'favorite' = 'all';
-    users: User[] = [];
-    tags: ArticleTag[] = [];
+    users: User[] = articleAuthorsMock;
+    tags: ArticleTag[] = articleTagsMock;
 
     views: MenuItem[] = [
         {
