@@ -1,0 +1,19 @@
+@import 'abstracts/var';
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+spp-card {
+    width: 280px;
+}
+
+section {
+    width: inherit;
+    padding: 12px;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid transparentize($dark-grey, 0.9);
+    }
+}

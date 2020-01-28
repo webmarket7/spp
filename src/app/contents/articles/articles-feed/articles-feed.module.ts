@@ -14,6 +14,8 @@ import { SppMenuItemModule } from '../../../shared/ui/spp-menu-item/spp-menu-ite
 import { SppButtonModule } from '../../../shared/ui/spp-button/spp-button.module';
 import { SppViewsModule } from '../../../shared/ui/spp-views/spp-views.module';
 import { ArticleCardModule } from '../../../shared/article/article-card/article-card.module';
+import { SppFilterModule } from '../../../shared/ui/spp-filter/spp-filter.module';
+import { SppUserModule } from '../../../shared/ui/spp-user/spp-user.module';
 
 
 @NgModule({
@@ -33,7 +35,9 @@ import { ArticleCardModule } from '../../../shared/article/article-card/article-
         SppSidebarPortalModule,
         SppMenuItemModule,
         SppViewsModule,
-        ArticleCardModule
+        ArticleCardModule,
+        SppFilterModule,
+        SppUserModule
     ]
 })
 export class ArticlesFeedModule {

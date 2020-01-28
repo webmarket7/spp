@@ -7,6 +7,9 @@ import { Credentials } from './models/credentials.model';
 })
 export class AuthService {
 
+    authenticated: boolean;
+    token: string;
+
     constructor(
         private router: Router,
     ) {
@@ -28,16 +31,25 @@ export class AuthService {
         }
     }
 
-    signIn(credentials: Credentials): void {
-        console.log({credentials});
+    redirect(redirectTo: string) {
+        this.router.navigateByUrl(redirectTo || '/app');
+    }
+
+    authenticate(token: string) {
+        this.authenticated = true;
+        this.token = token;
+    }
+
+    signIn({username, password}: Credentials, redirectTo?: string): void {
+        const token = btoa(`${username}:${password}`);
+
+        AuthService.saveToken(token);
+        this.authenticate(token);
+        this.redirect(redirectTo);
     }
 
     signUp(credentials: Credentials): void {
-        console.log({credentials});
-    }
-
-    redirect(redirectTo: string) {
-        this.router.navigateByUrl(redirectTo || '/app');
+        this.signIn(credentials);
     }
 }
 

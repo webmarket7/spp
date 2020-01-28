@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { checkEmailValidity } from '../../common/helpers';
 import { AuthService } from '../auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'sign-in',
@@ -17,6 +18,7 @@ export class SignInComponent implements OnInit {
 
     constructor(
         private title: Title,
+        private activatedRoute: ActivatedRoute,
         private authService: AuthService
     ) {}
 
@@ -30,6 +32,9 @@ export class SignInComponent implements OnInit {
     }
 
     onSubmit(): void {
-        this.authService.signIn({username: this.email, password: this.password});
+        this.authService.signIn(
+            {username: this.email, password: this.password},
+            this.activatedRoute.snapshot.queryParamMap.get('redirectTo')
+        );
     }
 }

@@ -4,17 +4,19 @@ import { ArticlesFeedComponent } from './articles-feed.component';
 import { ArticlesDefaultViewComponent } from './articles-default-view/articles-default-view.component';
 import { ArticlesListViewComponent } from './articles-list-view/articles-list-view.component';
 import { ArticlesTilesViewComponent } from './articles-tiles-view/articles-tiles-view.component';
+import { AuthGuard } from '../../../guards/auth.guard';
 
 
 const routes: Routes = [
     {
         path: '',
         component: ArticlesFeedComponent,
+        canActivate: [AuthGuard],
         children: [
             {
                 path: '',
                 redirectTo: 'list',
-                pathMatch: 'full'
+                pathMatch: 'full',
             },
             {
                 path: 'default',

@@ -1,5 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MenuItem } from '../../../common/models/menu-item.interface';
+import { User } from '../../../common/models/user.interface';
+import { ArticleTag } from '../../../common/models/article-tag.interface';
+import { map } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
+import { Observable, Subscription, SubscriptionLike } from 'rxjs';
+import { ArticleParams } from '../../../common/models/article-params.interface';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { normalizeQueryParam } from '../../../common/helpers';
+
 
 @Component({
     selector: 'articles-feed',
@@ -7,7 +16,13 @@ import { MenuItem } from '../../../common/models/menu-item.interface';
     styleUrls: ['./articles-feed.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ArticlesFeedComponent {
+export class ArticlesFeedComponent implements OnInit, OnDestroy {
+    private articleFilterParams$: Observable<Partial<ArticleParams>>;
+    private queryParamsSubscription: SubscriptionLike = Subscription.EMPTY;
+
+    category: 'all' | 'liked' | 'favorite' = 'all';
+    users: User[] = [];
+    tags: ArticleTag[] = [];
 
     views: MenuItem[] = [
         {
@@ -27,6 +42,31 @@ export class ArticlesFeedComponent {
         }
     ];
 
-    constructor() {
+    constructor(
+        private title: Title,
+        private activatedRoute: ActivatedRoute
+    ) {
+    }
+
+    ngOnInit(): void {
+        this.title.setTitle('Articles Feed');
+
+        this.articleFilterParams$ = this.activatedRoute.queryParamMap.pipe(map((queryParamMap: ParamMap) => {
+            const authorId = normalizeQueryParam(queryParamMap.get('authorIds'));
+            const tags = normalizeQueryParam(queryParamMap.get('tagIds'));
+
+            return {
+                ...(authorId && {authorId}),
+                ...(tags && {tags})
+            };
+        }));
+
+        this.queryParamsSubscription = this.articleFilterParams$.subscribe((filterParams: Partial<ArticleParams>) => {
+            console.log(filterParams);
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.queryParamsSubscription.unsubscribe();
     }
 }
