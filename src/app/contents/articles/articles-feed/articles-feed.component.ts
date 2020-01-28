@@ -54,10 +54,14 @@ export class ArticlesFeedComponent implements OnInit, OnDestroy {
         this.title.setTitle('Articles Feed');
 
         this.articleFilterParams$ = this.activatedRoute.queryParamMap.pipe(map((queryParamMap: ParamMap) => {
+            const category = normalizeQueryParam(queryParamMap.get('category'));
+            this.category = (category || 'all') as 'all' | 'liked' | 'favorite';
+
             const authorId = normalizeQueryParam(queryParamMap.get('authorIds'));
             const tags = normalizeQueryParam(queryParamMap.get('tagIds'));
 
             return {
+                ...(category && {category}),
                 ...(authorId && {authorId}),
                 ...(tags && {tags})
             };
