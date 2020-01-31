@@ -1,0 +1,47 @@
+@import 'abstracts/var';
+
+:host {
+    display: flex;
+    align-items: center;
+    position: relative;
+
+    height: 32px;
+    width: 100%;
+    max-width: 100%;
+
+    &:not(.disabled) {
+        cursor: pointer;
+
+        &:hover {
+            background-color: transparentize($blue, 0.94);
+            border-radius: 2px;
+        }
+    }
+
+    &.selected {
+        .spp-list-item__container {
+            &::before {
+                content: '';
+                width: 3px;
+                border-radius: 0 2px 2px 0;
+                background-color: $blue;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+            }
+        }
+    }
+
+    &.disabled {
+        pointer-events: none;
+    }
+}
+
+.spp-list-item__container {
+    position: relative;
+    height: 24px;
+    padding: 0 12px;
+    width: 100%;
+    max-width: 100%;
+}

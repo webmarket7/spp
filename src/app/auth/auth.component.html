@@ -1,0 +1,33 @@
+<main>
+    <div>
+        <h2>Welcome to</h2>
+        <h1>Skill++</h1>
+        <h4>Curiosity is one of the permanent and certain characteristics of a vigorous mind.</h4>
+    </div>
+</main>
+<aside>
+    <nav>
+        <ul>
+            <li>
+                <a routerLink="sign-in"
+                   routerLinkActive="active"
+                >
+                    <span>Sign In</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="sign-up"
+                   routerLinkActive="active"
+                >
+                    <span>Sign Up</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <div class="auth__sidebar-wrapper">
+        <div class="auth__sidebar">
+            <img src="../../assets/logo.png" alt="logo">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</aside>

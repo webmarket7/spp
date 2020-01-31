@@ -1,0 +1,16 @@
+<ng-container *ngIf='list?.length; else nothingFound'>
+    <spp-list-item
+        *ngFor='let item of list; index as i; trackBy: trackByFn'
+        [ngClass]='{selected: isSelected(item)}'
+        (click)='onItemSelected($event, item)'
+    >
+        <ng-template [ngTemplateOutlet]='itemTemplate'
+                     [ngTemplateOutletContext]='{$implicit: item, selected: selectedIdsMap.has(item[identifier])}'></ng-template>
+    </spp-list-item>
+</ng-container>
+
+<ng-template #nothingFound>
+    <div class='spp-list__nothing-found'>
+        <span>{{ nothingFoundText }}</span>
+    </div>
+</ng-template>

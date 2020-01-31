@@ -1,6 +1,66 @@
 <ng-container *sidebarPortal>
+
     <spp-sidebar-section header='Views'>
         <spp-views [views]='views'></spp-views>
+    </spp-sidebar-section>
+
+    <spp-sidebar-section header='Categories'>
+        <a
+            spp-menu-item
+            icon='th-small'
+            label='All'
+            [routerLink]='[]'
+            [queryParams]='{category: null}'
+            queryParamsHandling='merge'
+            [class.active]='category === "all"'
+        ></a>
+        <a
+            spp-menu-item
+            icon='heart'
+            label='Liked articles'
+            [routerLink]='[]'
+            [queryParams]='{category: "liked"}'
+            queryParamsHandling='merge'
+            [class.active]='category === "liked"'
+        ></a>
+        <a
+            spp-menu-item
+            icon='star'
+            label='Favorites'
+            [routerLink]='[]'
+            [queryParams]='{category: "favorite"}'
+            queryParamsHandling='merge'
+            [class.active]='category === "favorite"'
+        ></a>
+
+    </spp-sidebar-section>
+
+    <spp-sidebar-section header='Filters'>
+
+        <spp-filter icon='filter-by-tags'
+                    name='tagIds'
+                    label='By tags'
+                    optionIdKey='seq'
+                    [dataSource]='tags'
+        >
+            <ng-template let-tag let-selected='selected'>
+                <div class='tag-list-item'>{{ tag?.name }}</div>
+            </ng-template>
+        </spp-filter>
+
+        <spp-filter icon='filter-by-author'
+                    name='authorIds'
+                    label='By author'
+                    [dataSource]='users'
+        >
+            <ng-template let-user>
+                <div class='user-list-item'>
+                    <spp-user-pic [picture]='user?.picture' containerSize=24 iconSize=18></spp-user-pic>
+                    <span class='user-list-item__name'>{{ user | userName }}</span>
+                </div>
+            </ng-template>
+        </spp-filter>
+
     </spp-sidebar-section>
 </ng-container>
 
