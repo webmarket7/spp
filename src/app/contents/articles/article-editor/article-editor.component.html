@@ -1,0 +1,50 @@
+<spp-page-layout>
+    <h1>{{ header }}</h1>
+    <form [formGroup]='form' (submit)='submitForm(form)' novalidate='' autocomplete='off'>
+        <spp-card>
+            <mat-form-field appearance='fill'>
+                <mat-label>Title</mat-label>
+                <input matInput formControlName='title' maxlength=70>
+                <mat-hint>{{ titleControl?.value?.length || 0 }}/70</mat-hint>
+                <mat-error *ngIf='titleControl.invalid'>{{ getTitleErrorMessage() }}</mat-error>
+            </mat-form-field>
+        </spp-card>
+        <spp-card>
+            <mat-form-field appearance='fill'>
+                <mat-label>Annotation</mat-label>
+                <textarea
+                    class='annotation-textarea'
+                    matInput
+                    formControlName='description'
+                    cdkTextareaAutosize
+                    maxlength=255
+                ></textarea>
+                <mat-hint>{{ descriptionControl?.value?.length || 0 }}/255</mat-hint>
+                <mat-error *ngIf='descriptionControl.invalid'>{{ getAnnotationErrorMessage() }}</mat-error>
+            </mat-form-field>
+        </spp-card>
+        <spp-card>
+            <editor [init]='editorConfig' formControlName='text'></editor>
+        </spp-card>
+        <spp-card>
+            <image-uploader formControlName='image'></image-uploader>
+        </spp-card>
+        <spp-card>
+            <article-tags-selector formControlName='tags' [tags]='tags'></article-tags-selector>
+        </spp-card>
+        <div class='article-editor__controls'>
+            <button type='button' spp-button class='outlined' (click)='onCancel($event)'>
+                <div class='input-icon'>
+                    <spp-icon icon='close'></spp-icon>
+                </div>
+                <span>Cancel</span>
+            </button>
+            <button type='submit' spp-button class='filled' [disabled]='form.invalid'>
+                <div class='input-icon'>
+                    <spp-icon icon='add-post'></spp-icon>
+                </div>
+                <span>{{ submitButtonLabel }}</span>
+            </button>
+        </div>
+    </form>
+</spp-page-layout>

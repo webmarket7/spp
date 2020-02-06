@@ -16,6 +16,7 @@ import { SppIconModule } from '../shared/ui/spp-icon/spp-icon.module';
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         AuthRoutingModule,
         MatFormFieldModule,
         MatInputModule,

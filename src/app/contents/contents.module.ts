@@ -31,7 +31,7 @@ import { SppSidebarPortalModule } from '../shared/ui/spp-sidebar-portal/spp-side
         SppSidebarPortalModule,
         SppSidebarSectionModule,
         SppUserModule,
-        SppMenuItemModule
+        SppMenuItemModule,
     ]
 })
 export class ContentsModule {

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { checkEmailValidity } from '../../common/helpers';
 import { AuthService } from '../auth.service';
 import { ActivatedRoute } from '@angular/router';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
     selector: 'sign-in',
@@ -12,28 +12,51 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class SignInComponent implements OnInit {
 
-    email = '';
-    emailValid: boolean;
-    password = '';
+    signInForm: FormGroup;
+
+    get emailControl(): AbstractControl {
+        return this.signInForm.get('email');
+    }
+
+    get passwordControl(): AbstractControl {
+        return this.signInForm.get('password');
+    }
 
     constructor(
         private title: Title,
+        private fb: FormBuilder,
         private activatedRoute: ActivatedRoute,
         private authService: AuthService
-    ) {}
-
-    onEmailChange(email: string): void {
-        this.email = email;
-        this.emailValid = checkEmailValidity(email);
+    ) {
     }
 
     ngOnInit(): void {
         this.title.setTitle('Sign in');
+        this.signInForm = this.initForm();
+    }
+
+    initForm(): FormGroup {
+        return this.fb.group({
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required]]
+        });
+    }
+
+    getEmailErrorMessage(): string {
+        return this.emailControl.hasError('required') ? 'You must enter a value' :
+            this.emailControl.hasError('email') ? 'Not a valid email' :
+                '';
+    }
+
+    getPasswordErrorMessage(): string {
+        return this.passwordControl.hasError('required') ? 'You must enter a value' : '';
     }
 
     onSubmit(): void {
+        const {email, password} = this.signInForm.value;
+
         this.authService.signIn(
-            {username: this.email, password: this.password},
+            {username: email, password},
             this.activatedRoute.snapshot.queryParamMap.get('redirectTo')
         );
     }

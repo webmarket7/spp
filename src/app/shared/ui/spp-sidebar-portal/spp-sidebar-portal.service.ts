@@ -5,6 +5,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
     providedIn: 'root'
 })
 export class SppSidebarPortalService {
+
+    templateRef: TemplateRef<any>;
     portal: BehaviorSubject<TemplateRef<any>> = new BehaviorSubject(null);
 
     constructor() {
@@ -15,10 +17,12 @@ export class SppSidebarPortalService {
     }
 
     projectInPortal(templateRef: TemplateRef<any>): void {
+        this.templateRef = templateRef;
         this.portal.next(templateRef);
     }
 
     clearPortal(): void {
+        this.templateRef = null;
         this.portal.next(null);
     }
 }

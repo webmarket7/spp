@@ -1,0 +1,67 @@
+@import 'abstracts/var';
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 260px;
+    background-color: $light-grey;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    border-bottom: 1px solid $dark-grey;
+
+    &.with-preview {
+        border-bottom: 2px solid $blue;
+
+        .image-uploader__wrapper {
+            color: $white;
+            text-shadow: 0 1px 1px transparentize($black, 0.4);
+
+            spp-icon {
+                fill: $white;
+            }
+        }
+    }
+}
+
+.image-uploader {
+    &__wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: rgba(49, 49, 49, 0.6);
+        text-align: center;
+        font-weight: 500;
+
+        span {
+            font-size: 18px;
+        }
+
+        spp-icon {
+            fill: transparentize($dark-grey, 0.4)
+        }
+    }
+
+    &__hint {
+        font-size: 12px;
+        line-height: 1.5;
+        color: $grey;
+    }
+}

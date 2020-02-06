@@ -3,7 +3,13 @@
     <spp-sidebar-section header='Views'>
         <spp-views [views]='views'></spp-views>
     </spp-sidebar-section>
-
+    <spp-sidebar-section header='Actions'>
+        <a spp-menu-item
+           routerLink='/app/articles/editor/create'
+           icon='add-post'
+           label='Create post'
+        ></a>
+    </spp-sidebar-section>
     <spp-sidebar-section header='Categories'>
         <a
             spp-menu-item
@@ -32,11 +38,9 @@
             queryParamsHandling='merge'
             [class.active]='category === "favorite"'
         ></a>
-
     </spp-sidebar-section>
 
     <spp-sidebar-section header='Filters'>
-
         <spp-filter icon='filter-by-tags'
                     name='tagIds'
                     label='By tags'
@@ -60,8 +64,8 @@
                 </div>
             </ng-template>
         </spp-filter>
-
     </spp-sidebar-section>
+
 </ng-container>
 
 <spp-page-layout>

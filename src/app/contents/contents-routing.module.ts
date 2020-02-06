@@ -10,11 +10,6 @@ const routes: Routes = [
         component: ContentsComponent,
         children: [
             {
-                path: '',
-                redirectTo: 'articles',
-                pathMatch: 'full'
-            },
-            {
                 path: 'articles',
                 loadChildren: () => import('./articles/articles.module').then(m => m.ArticlesModule),
                 canLoad: [AuthGuard]
@@ -23,6 +18,11 @@ const routes: Routes = [
                 path: 'profile',
                 loadChildren: () => import('./profile/profile.module').then(m => m.ProfileModule),
                 canLoad: [AuthGuard]
+            },
+            {
+                path: '',
+                redirectTo: 'articles',
+                pathMatch: 'full'
             }
         ]
     }

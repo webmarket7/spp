@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { UserMock } from '../../../common/mocks/user.mock';
 import { User } from '../../../common/models/user.interface';
+import { SppSidebarPortalService } from '../../../shared/ui/spp-sidebar-portal/spp-sidebar-portal.service';
 
 @Component({
     selector: 'contents-sidebar',
@@ -11,6 +12,6 @@ export class ContentsSidebarComponent {
 
     currentUser: User = new UserMock('http://robohash.org/set_set1/bgset_bg2/kQqaIfGqxsjFoNIT', 'Zooey', 'Deschanel');
 
-    constructor() {
+    constructor(public sppSidebarPortalService: SppSidebarPortalService) {
     }
 }

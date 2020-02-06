@@ -8,7 +8,7 @@ import { SppListItemComponent } from './spp-list-item/spp-list-item.component';
 @NgModule({
     declarations: [
         SppListComponent,
-        SppListItemComponent
+        SppListItemComponent,
     ],
     imports: [
         CommonModule,
