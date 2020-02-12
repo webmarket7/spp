@@ -11,7 +11,7 @@ $reaction-active-color: $blue;
     spp-icon {
         width: 20px;
         height: 20px;
-        fill: $reaction-default-color;
+        color:$reaction-default-color;
     }
 
     span {
@@ -24,7 +24,7 @@ $reaction-active-color: $blue;
         cursor: pointer;
 
         spp-icon {
-            fill: $reaction-hover-color;
+            color:$reaction-hover-color;
         }
 
         span {

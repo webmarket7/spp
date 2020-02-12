@@ -5,11 +5,6 @@ import { AuthGuard } from '../../guards/auth.guard';
 
 const routes: Routes = [
     {
-        path: '',
-        redirectTo: 'feed',
-        pathMatch: 'full'
-    },
-    {
         path: 'feed',
         loadChildren: () => import('./articles-feed/articles-feed.module').then(m => m.ArticlesFeedModule),
         canLoad: [AuthGuard]
@@ -23,6 +18,11 @@ const routes: Routes = [
         path: 'editor',
         loadChildren: () => import('./article-editor/article-editor.module').then(m => m.ArticleEditorModule),
         canLoad: [AuthGuard]
+    },
+    {
+        path: '',
+        redirectTo: 'feed',
+        pathMatch: 'full'
     }
 ];
 

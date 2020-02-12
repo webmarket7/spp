@@ -34,7 +34,7 @@ label {
             text-shadow: 0 1px 1px transparentize($black, 0.4);
 
             spp-icon {
-                fill: $white;
+                color: $white;
             }
         }
     }
@@ -55,7 +55,7 @@ label {
         }
 
         spp-icon {
-            fill: transparentize($dark-grey, 0.4)
+            color: transparentize($dark-grey, 0.4)
         }
     }
 

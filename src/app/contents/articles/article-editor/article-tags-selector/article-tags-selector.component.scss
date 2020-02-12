@@ -77,7 +77,7 @@ $dropdown-width: 280px;
             color: $grey;
             font-size: 16px;
             font-weight: 500;
-            fill: $grey;
+            color: $grey;
             height: 48px;
             display: flex;
             align-items: center;
@@ -128,7 +128,7 @@ $dropdown-width: 280px;
     }
 
     > button {
-        fill: $grey;
+        color: $grey;
     }
 }
 

@@ -6,11 +6,6 @@ import { AuthGuard } from '../../../guards/auth.guard';
 
 const routes: Routes = [
     {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'create'
-    },
-    {
         path: 'create',
         component: ArticleEditorComponent,
         canActivate: [AuthGuard]
@@ -19,6 +14,11 @@ const routes: Routes = [
         path: 'edit/:articleId',
         component: ArticleEditorComponent,
         canActivate: [AuthGuard]
+    },
+    {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'create'
     }
 ];
 
