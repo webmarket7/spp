@@ -7,8 +7,12 @@ import { User } from '../../../../common/models/user.interface';
 export class UserNamePipe implements PipeTransform {
 
     transform(user: User): string {
-        const { firstName, lastName, username } = user;
+        if (user) {
+            const { firstName, lastName, username } = user;
 
-        return firstName && lastName ? `${firstName} ${lastName}` : username;
+            return firstName && lastName ? `${firstName} ${lastName}` : username;
+        } else {
+            return '';
+        }
     }
 }

@@ -77,7 +77,6 @@ $dropdown-width: 280px;
             color: $grey;
             font-size: 16px;
             font-weight: 500;
-            color: $grey;
             height: 48px;
             display: flex;
             align-items: center;
@@ -87,7 +86,7 @@ $dropdown-width: 280px;
             border-bottom-style: solid;
             border-bottom-color: $grey;
 
-            svg-icon {
+            spp-icon {
                 transform: rotate(90deg);
                 transition: transform 0.3s ease-in-out;
             }
@@ -95,7 +94,7 @@ $dropdown-width: 280px;
             &.open {
                 border-bottom-color: transparent;
 
-                svg-icon {
+                spp-icon {
                     transform: rotate(-90deg);
                 }
             }
@@ -143,4 +142,8 @@ $dropdown-width: 280px;
         width: 18px;
         color: $light-grey;
     }
+}
+
+article-tags {
+    flex-wrap: wrap;
 }

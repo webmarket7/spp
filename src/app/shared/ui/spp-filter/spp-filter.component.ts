@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, OnInit, TemplateRef } from '@angular/core';
-import { Observable } from 'rxjs';
-import { FormBuilder } from '@angular/forms';
+import { combineLatest, Observable } from 'rxjs';
+import { FormBuilder, FormControl } from '@angular/forms';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { map } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
+import { ArticleTag } from '../../../common/models/article-tag.interface';
 
 @Component({
     selector: 'spp-filter',
@@ -17,8 +18,9 @@ export class SppFilterComponent implements OnInit {
     @Input() label: string;
     @Input() icon: string;
     @Input() optionIdKey = 'id';
-    @Input() dataSource: any[];
+    @Input() dataSource: Observable<any[]>;
 
+    searchControl: FormControl = this.fb.control('');
     positions: ConnectedPosition[] = [
         {
             originX: 'end',
@@ -45,6 +47,7 @@ export class SppFilterComponent implements OnInit {
     ) {
     }
 
+    list$: Observable<any[]>;
     selectedIds$: Observable<Array<number | string>>;
 
     @ContentChild(TemplateRef, {static: false}) listOptionTemplateRef: TemplateRef<any>;
@@ -57,6 +60,14 @@ export class SppFilterComponent implements OnInit {
                 ? queryParamsString.split(this.separator)
                 : [];
         }));
+
+        this.list$ = combineLatest(this.searchControl.valueChanges.pipe(startWith('')), this.dataSource).pipe(
+            map(([searchTerm, entities]: [string, any[]]) => {
+                return entities.filter((tag: ArticleTag) => searchTerm
+                    ? RegExp(searchTerm, 'gi').test(tag.name)
+                    : true);
+            })
+        );
     }
 
     changeQueryParams(ids: Array<string | number>): void {

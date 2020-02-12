@@ -1,0 +1,74 @@
+<spp-sidebar-section header='Actions' *sidebarPortal>
+    <a
+        routerLink='/app/articles/editor/edit/{{ article?.id }}'
+        spp-menu-item
+        icon='edit-post'
+        label='Edit post'
+    ></a>
+    <button
+        spp-menu-item
+        icon='delete-post'
+        label='Delete post'
+        (click)='deleteArticle($event, article?.id)'
+    ></button>
+</spp-sidebar-section>
+
+<spp-page-layout>
+    <article>
+        <header>
+            <h1>{{ article?.title }}</h1>
+            <div class='article-page__header-caption'>
+                <ng-container *ngTemplateOutlet='caption; context: {$implicit: article}'></ng-container>
+            </div>
+        </header>
+
+        <section>
+            <img [src]='article?.image' alt='Article image'>
+            <div [innerHtml]='article?.text'></div>
+        </section>
+
+        <footer>
+            <div class='article-page__footer-caption'>
+                <ng-container *ngTemplateOutlet='caption; context: {$implicit: article}'></ng-container>
+            </div>
+        </footer>
+
+        <div class='article-page__tags'>
+            <h2 class='article-page__subheader'>Tags</h2>
+            <article-tags [tags]='article?.articleTags'>
+                <ng-template let-context=''>
+                    <article-tag [tag]='context'></article-tag>
+                </ng-template>
+            </article-tags>
+        </div>
+    </article>
+</spp-page-layout>
+
+<ng-template #caption let-article=''>
+    <div class='article-page__caption'>
+        <div class='article-page__caption-section'>
+            <article-author [author]='article?.articleAuthor' size='big'></article-author>
+        </div>
+        <div class='article-page__caption-section'>
+            <spp-bordered-sections>
+                <spp-bordered-section>
+                    <article-date [updatedDate]='article?.updatedAt'></article-date>
+                </spp-bordered-section>
+                <spp-bordered-section>
+                    <article-likes
+                        [liked]='liked'
+                        [likes]='likesCount'
+                        (toggle)='toggleLike()'
+                    ></article-likes>
+                </spp-bordered-section>
+                <spp-bordered-section>
+                    <article-favs
+                        [fav]='favorite'
+                        [favs]='favsCount'
+                        (toggle)='toggleFav()'
+                    ></article-favs>
+                </spp-bordered-section>
+            </spp-bordered-sections>
+        </div>
+    </div>
+</ng-template>

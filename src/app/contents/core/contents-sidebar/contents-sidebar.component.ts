@@ -1,17 +1,20 @@
-import { Component } from '@angular/core';
-import { UserMock } from '../../../common/mocks/user.mock';
+import { Component, OnInit } from '@angular/core';
 import { User } from '../../../common/models/user.interface';
-import { SppSidebarPortalService } from '../../../shared/ui/spp-sidebar-portal/spp-sidebar-portal.service';
+import { GlobalService } from '../../../services/global.service';
 
 @Component({
     selector: 'contents-sidebar',
     templateUrl: './contents-sidebar.component.html',
     styleUrls: ['./contents-sidebar.component.scss']
 })
-export class ContentsSidebarComponent {
+export class ContentsSidebarComponent implements OnInit {
 
-    currentUser: User = new UserMock('http://robohash.org/set_set1/bgset_bg2/kQqaIfGqxsjFoNIT', 'Zooey', 'Deschanel');
+    currentUser: User;
 
-    constructor(public sppSidebarPortalService: SppSidebarPortalService) {
+    constructor(private globalService: GlobalService) {
+    }
+
+    ngOnInit() {
+        this.currentUser = this.globalService.currentUser;
     }
 }

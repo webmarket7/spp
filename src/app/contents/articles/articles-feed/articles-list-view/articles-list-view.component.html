@@ -1,5 +1,5 @@
 <div class='article-cards__wrapper'>
-    <div class='article-card' *ngFor='let article of articles; trackBy: trackByFn'>
+    <div class='article-card' *ngFor='let article of articles$ | async; trackBy: trackByFn'>
         <article-card [ngClass]='cardType' [article]='article'></article-card>
     </div>
 </div>

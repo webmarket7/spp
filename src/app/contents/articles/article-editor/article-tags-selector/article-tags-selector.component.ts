@@ -1,8 +1,11 @@
-import { Component, forwardRef, HostBinding, Input } from '@angular/core';
+import { Component, forwardRef, HostBinding, Input, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { intersectionWith } from 'lodash';
 import { ArticleTag } from '../../../../common/models/article-tag.interface';
+import { ArticleTagsService } from '../../../../services/article-tags.service';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 
 
 @Component({
@@ -17,11 +20,10 @@ import { ArticleTag } from '../../../../common/models/article-tag.interface';
         }
     ]
 })
-export class ArticleTagsSelectorComponent implements ControlValueAccessor {
+export class ArticleTagsSelectorComponent implements OnInit, ControlValueAccessor {
     @HostBinding('class.disabled') isDisabled: boolean;
 
-    @Input() tags: ArticleTag[] = [];
-
+    searchControl: FormControl = this.fb.control('');
     positions: ConnectedPosition[] = [
         {
             originX: 'start',
@@ -41,21 +43,37 @@ export class ArticleTagsSelectorComponent implements ControlValueAccessor {
     open = false;
     currentOverlayPosition: 'bottom' | 'top' | 'center';
 
-    selectedIds: number[] = [];
-    selectedTags: ArticleTag[] = [];
+    tags$: Observable<ArticleTag[]>;
+    selectedIds: BehaviorSubject<Array<number | string>> = new BehaviorSubject([]);
+    selectedIds$: Observable<Array<number | string>> = this.selectedIds.asObservable();
 
-    private propagateChange = (value: Array<number | string>) => {
-    };
-    private propagateTouched = (event: FocusEvent) => {
-    };
+    list$: Observable<ArticleTag[]>;
+    selectedTags$: Observable<ArticleTag[]>;
+
+    static getSelectedTags(tags, selectedIds): ArticleTag[] {
+        return intersectionWith(tags, selectedIds, (tag: ArticleTag, seq: number) => +tag.seq === +seq);
+    }
+
+    private propagateChange = (value: Array<number | string>) => {};
+    private propagateTouched = (event: FocusEvent) => {};
 
     constructor(
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private articleTagsService: ArticleTagsService
     ) {
     }
 
-    getSelectedTags(tags, selectedIds): ArticleTag[] {
-        return intersectionWith(tags, selectedIds, (tag: ArticleTag, seq: number) => +tag.seq === +seq);
+    ngOnInit(): void {
+        this.tags$ = this.articleTagsService.getAll();
+        this.list$ = combineLatest(this.searchControl.valueChanges.pipe(startWith('')), this.tags$).pipe(
+            map(([searchTerm, tags]: [string, ArticleTag[]]) => {
+                return tags.filter((tag: ArticleTag) => searchTerm
+                    ? RegExp(searchTerm, 'gi').test(tag.name)
+                    : true);
+            })
+        );
+        this.selectedTags$ = combineLatest(this.tags$, this.selectedIds$)
+            .pipe(map(([tags, selectedIds]) => ArticleTagsSelectorComponent.getSelectedTags(tags, selectedIds)));
     }
 
     toggleDropdown(event: MouseEvent): void {
@@ -69,9 +87,10 @@ export class ArticleTagsSelectorComponent implements ControlValueAccessor {
     }
 
     onSelectionChange({selectedIds}: { selectedIds: number[] }): void {
-        this.selectedTags = this.getSelectedTags(this.tags, selectedIds);
-        this.propagateChange(selectedIds || []);
-        this.selectedIds = selectedIds;
+        const ids = selectedIds || [];
+
+        this.selectedIds.next(ids);
+        this.propagateChange(ids);
     }
 
     registerOnChange(fn: any): void {
@@ -87,11 +106,18 @@ export class ArticleTagsSelectorComponent implements ControlValueAccessor {
     }
 
     writeValue(selectedIds: number[]): void {
-        this.selectedIds = selectedIds;
-        this.selectedTags = this.getSelectedTags(this.tags, selectedIds);
+        this.selectedIds.next(selectedIds || []);
+    }
+
+    createNewTag({value}: { value: string }): void {
+        const newTag = this.articleTagsService.createArticleTag(value);
+
+        this.articleTagsService.addOne(newTag);
+        this.searchControl.reset('');
     }
 
     deleteTag(event: MouseEvent, articleTagId: number): void {
         event.stopPropagation();
+        this.articleTagsService.removeOne(articleTagId);
     }
 }

@@ -19,11 +19,17 @@
 >
     <spp-card>
         <section>
+            <spp-list-search
+                placeholder='Search tags...'
+                [formControl]='searchControl'
+            ></spp-list-search>
+        </section>
+        <section>
             <spp-list
                 [identifier]='optionIdKey'
                 nothingFoundText='Nothing found'
                 [selectedIds]='selectedIds$ | async'
-                [list]='dataSource'
+                [list]='list$ | async'
                 (done)='applyFilter($event)'
             >
                 <ng-template let-item let-selected='selected'>

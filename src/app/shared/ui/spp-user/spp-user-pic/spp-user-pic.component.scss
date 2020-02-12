@@ -38,5 +38,9 @@
     &__placeholder {
         background-color: $blue;
         color: $white;
+
+        spp-icon {
+            color: $white;
+        }
     }
 }

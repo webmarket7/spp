@@ -50,6 +50,38 @@ h1 {
                 align-items: center;
                 padding-right: 8px;
             }
+
+            &.outlined {
+                .input-icon {
+                    spp-icon {
+                        color: $blue;
+                    }
+                }
+
+                &:hover {
+                    .input-icon {
+                        spp-icon {
+                            color: $white;
+                        }
+                    }
+                }
+            }
+
+            &.filled {
+                .input-icon {
+                    spp-icon {
+                        color: $white;
+                    }
+                }
+
+                &:disabled {
+                    .input-icon {
+                        spp-icon {
+                            color: transparentize($white, 0.4);
+                        }
+                    }
+                }
+            }
         }
     }
 }

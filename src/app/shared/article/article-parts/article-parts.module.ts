@@ -5,6 +5,7 @@ import { ArticleLikesComponent } from './article-reactions/article-likes/article
 import { ArticleFavsComponent } from './article-reactions/article-favs/article-favs.component';
 import { SppIconModule } from '../../ui/spp-icon/spp-icon.module';
 import { SppUserModule } from '../../ui/spp-user/spp-user.module';
+import { ArticleDateComponent } from './article-date/article-date.component';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import { SppUserModule } from '../../ui/spp-user/spp-user.module';
         ArticleAuthorComponent,
         ArticleLikesComponent,
         ArticleFavsComponent,
+        ArticleDateComponent
     ],
     imports: [
         CommonModule,
@@ -22,6 +24,7 @@ import { SppUserModule } from '../../ui/spp-user/spp-user.module';
         ArticleAuthorComponent,
         ArticleLikesComponent,
         ArticleFavsComponent,
+        ArticleDateComponent
     ]
 })
 export class ArticlePartsModule {
