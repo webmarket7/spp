@@ -6,15 +6,12 @@ $default-size: 24px;
     display: inline-block;
     width: $default-size;
     height: $default-size;
-
-    &.grey {
-        fill: $grey;
-    }
+    color: $grey;
 
     svg {
         display: inline-block;
         width: inherit;
         height: inherit;
-        color: inherit;
+        fill: currentColor;
     }
 }

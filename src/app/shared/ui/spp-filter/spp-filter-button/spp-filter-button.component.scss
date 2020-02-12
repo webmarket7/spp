@@ -15,7 +15,7 @@
 }
 
 spp-icon {
-    fill: $grey;
+    color: $grey;
 }
 
 .spp-filter-button {
@@ -35,6 +35,7 @@ spp-icon {
             font-size: 0.875rem;
             line-height: 1.5;
             max-width: 100%;
+            color: $grey;
         }
     }
 }

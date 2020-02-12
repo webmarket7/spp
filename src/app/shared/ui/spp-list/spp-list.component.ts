@@ -41,6 +41,7 @@ export class SppListComponent implements OnInit, OnChanges, OnDestroy {
 
     ngOnChanges(changes: SimpleChanges): void {
         const {selectedIds} = changes;
+        console.log({selectedIds});
 
         if (selectedIds && selectedIds.currentValue) {
             const arr = selectedIds.currentValue;

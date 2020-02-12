@@ -6,11 +6,6 @@ import { PageNotFoundComponent } from './core/page-not-found/page-not-found.comp
 
 const routes: Routes = [
     {
-        path: '',
-        redirectTo: 'app',
-        pathMatch: 'full'
-    },
-    {
         path: 'auth',
         loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule),
         canLoad: [NotAuthGuard]
@@ -19,6 +14,11 @@ const routes: Routes = [
         path: 'app',
         loadChildren: () => import('./contents/contents.module').then(m => m.ContentsModule),
         canLoad: [AuthGuard]
+    },
+    {
+        path: '',
+        redirectTo: 'app',
+        pathMatch: 'full'
     },
     {
         path: '**',

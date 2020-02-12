@@ -1,4 +1,4 @@
-import { Directive, NgZone, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { AfterViewInit, Directive, NgZone, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { SppSidebarPortalService } from './spp-sidebar-portal.service';
 
 @Directive({
@@ -7,8 +7,7 @@ import { SppSidebarPortalService } from './spp-sidebar-portal.service';
 export class SppSidebarPortalDirective implements OnInit, OnDestroy {
     constructor(
         private templateRef: TemplateRef<any>,
-        private sidebarPortalService: SppSidebarPortalService,
-        private ngZone: NgZone
+        private sidebarPortalService: SppSidebarPortalService
     ) {
     }
 

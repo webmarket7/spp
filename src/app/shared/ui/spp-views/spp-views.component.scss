@@ -9,16 +9,17 @@
         align-items: center;
         height: 40px;
         width: 40px;
+        border-radius: 4px;
 
         spp-icon {
-            fill: $grey;
+            color: $grey;
         }
 
         &.active {
             background-color: $blue;
 
             spp-icon {
-                fill: $white;
+                color: $white;
             }
         }
 

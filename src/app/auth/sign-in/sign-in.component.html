@@ -1,22 +1,24 @@
-<form class='sign-in__form' (submit)='onSubmit()'>
+<form [formGroup]='signInForm' class='sign-in__form' (ngSubmit)='onSubmit()'>
     <h2>Sign In</h2>
     <mat-form-field appearance='fill' class='sign-in__form-field'>
         <mat-label>Email</mat-label>
         <div matPrefix class='input-icon'>
             <spp-icon class='grey' icon='user'></spp-icon>
         </div>
-        <input type='email' name='email' matInput [ngModel]='email' (ngModelChange)='onEmailChange($event)'>
+        <input type='email' matInput formControlName='email'>
         <mat-hint>Your registration email</mat-hint>
+        <mat-error *ngIf='emailControl.invalid'>{{ getEmailErrorMessage() }}</mat-error>
     </mat-form-field>
     <mat-form-field appearance='fill' class='sign-in__form-field'>
         <mat-label>Password</mat-label>
         <div matPrefix class='input-icon'>
             <spp-icon class='grey' icon='key'></spp-icon>
         </div>
-        <input type='password' name='password' matInput [(ngModel)]='password'>
+        <input type='password' matInput formControlName='password'>
         <mat-hint>Your password</mat-hint>
+        <mat-error *ngIf='passwordControl.invalid'>{{ getPasswordErrorMessage() }}</mat-error>
     </mat-form-field>
-    <button spp-button class='filled' [disabled]='!email || !emailValid || !password'>
+    <button spp-button class='filled' [disabled]='signInForm.invalid'>
         <div class='input-icon'>
             <spp-icon icon='log-in'></spp-icon>
         </div>

@@ -14,11 +14,6 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         children: [
             {
-                path: '',
-                redirectTo: 'list',
-                pathMatch: 'full',
-            },
-            {
                 path: 'default',
                 component: ArticlesDefaultViewComponent
             },
@@ -30,6 +25,11 @@ const routes: Routes = [
                 path: 'tiles',
                 component: ArticlesTilesViewComponent
             },
+            {
+                path: '',
+                redirectTo: 'list',
+                pathMatch: 'full'
+            }
         ]
     }
 ];

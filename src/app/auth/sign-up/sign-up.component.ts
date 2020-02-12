@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { checkEmailValidity } from '../../common/helpers';
 import { AuthService } from '../auth.service';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CustomValidators } from '../../common/custom-validators';
+import { Subscription, SubscriptionLike } from 'rxjs';
 
 
 @Component({
@@ -10,50 +12,76 @@ import { AuthService } from '../auth.service';
     styleUrls: ['./sign-up.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SignUpComponent implements OnInit {
+export class SignUpComponent implements OnInit, OnDestroy {
 
-    email: string;
-    emailValid: boolean;
+    signUpForm: FormGroup;
+    passwordSubscription: SubscriptionLike = Subscription.EMPTY;
 
-    password: string;
-    confirmPassword: string;
-    passwordValid: boolean;
+    get emailControl(): AbstractControl {
+        return this.signUpForm.get('email');
+    }
 
-    constructor(
-        private authService: AuthService,
-        private title: Title
-    ) {}
+    get passwordControl(): AbstractControl {
+        return this.signUpForm.get('password');
+    }
+
+    get confirmPasswordControl(): AbstractControl {
+        return this.signUpForm.get('confirmPassword');
+    }
+
+    constructor(private title: Title,
+                private fb: FormBuilder,
+                private authService: AuthService) {
+    }
 
     ngOnInit(): void {
-        this.title.setTitle('Sign in');
+        this.title.setTitle('Sign up');
+        this.signUpForm = this.initForm();
+
+        this.passwordSubscription = this.passwordControl.valueChanges.subscribe(() => {
+            this.confirmPasswordControl.updateValueAndValidity();
+        });
     }
 
-    onEmailChange(email: string): void {
-        this.email = email;
-        this.emailValid = checkEmailValidity(email);
+    ngOnDestroy(): void {
+        this.passwordSubscription.unsubscribe();
     }
 
-    checkPasswordLength(password: string): boolean {
-        return password && password.length >= 8;
+    initForm(): FormGroup {
+        return this.fb.group({
+            email: ['', [Validators.required, Validators.email]],
+            password: ['', [Validators.required, Validators.minLength(8)]],
+            confirmPassword: ['', [Validators.required, CustomValidators.compareWith('password')]]
+        });
     }
 
-    checkPasswordValidity(): boolean {
-        return this.checkPasswordLength(this.password) && this.checkPasswordLength(this.confirmPassword)
-            ? this.password === this.confirmPassword
-            : false;
+    getEmailErrorMessage(): string {
+        return this.emailControl.hasError('required')
+            ? 'You must enter a value' :
+            this.emailControl.hasError('email')
+                ? 'Not a valid email'
+                : '';
     }
 
-    onPasswordChange(password: string): void {
-        this.password = password;
-        this.passwordValid = this.checkPasswordValidity();
+    getPasswordErrorMessage(): string {
+        return this.passwordControl.hasError('required')
+            ? 'You must enter a value'
+            : this.passwordControl.hasError('minlength')
+                ? `Password must contain ${this.passwordControl.getError('minlength').requiredLength} symbols or more`
+                : '';
     }
 
-    onConfirmPasswordChange(confirmPassword: string): void {
-        this.confirmPassword = confirmPassword;
-        this.passwordValid = this.checkPasswordValidity();
+    getConfirmPasswordErrorMessage(): string {
+        return this.confirmPasswordControl.hasError('required')
+            ? 'You must enter a value'
+            : this.confirmPasswordControl.hasError('mismatch')
+                ? 'Passwords do not match'
+                : '';
     }
 
     onSubmit(): void {
-        this.authService.signUp({username: this.email, password: this.password});
+        const {email, password} = this.signUpForm.value;
+
+        this.authService.signUp({username: email, password});
     }
 }
