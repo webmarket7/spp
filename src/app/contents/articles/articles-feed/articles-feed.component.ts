@@ -8,8 +8,8 @@ import { Observable, Subscription, SubscriptionLike } from 'rxjs';
 import { ArticleParams } from '../../../common/models/article-params.interface';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { normalizeQueryParam } from '../../../common/helpers';
-import { articleAuthorsMock } from '../../../common/mocks/article-authors.mock';
-import { articleTagsMock } from '../../../common/mocks/article-tags.mock';
+import { ArticleTagsService } from '../../../services/article-tags.service';
+import { UsersService } from '../../../services/users.service';
 
 
 @Component({
@@ -23,9 +23,6 @@ export class ArticlesFeedComponent implements OnInit, OnDestroy {
     private queryParamsSubscription: SubscriptionLike = Subscription.EMPTY;
 
     category: 'all' | 'liked' | 'favorite' = 'all';
-    users: User[] = articleAuthorsMock;
-    tags: ArticleTag[] = articleTagsMock;
-
     views: MenuItem[] = [
         {
             label: 'Default view',
@@ -43,15 +40,21 @@ export class ArticlesFeedComponent implements OnInit, OnDestroy {
             path: 'tiles'
         }
     ];
+    users$: Observable<User[]>;
+    tags$: Observable<ArticleTag[]>;
 
     constructor(
         private title: Title,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private usersService: UsersService,
+        private articleTagsService: ArticleTagsService
     ) {
     }
 
     ngOnInit(): void {
         this.title.setTitle('Articles Feed');
+        this.users$ = this.usersService.getAll();
+        this.tags$ = this.articleTagsService.getAll();
 
         this.articleFilterParams$ = this.activatedRoute.queryParamMap.pipe(map((queryParamMap: ParamMap) => {
             const category = normalizeQueryParam(queryParamMap.get('category'));

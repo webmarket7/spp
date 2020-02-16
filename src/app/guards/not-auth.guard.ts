@@ -24,7 +24,6 @@ export class NotAuthGuard implements CanActivate, CanLoad {
         segments: UrlSegment[]
     ): boolean {
         const authenticated = this.authService.authenticated;
-        console.log({authenticated});
 
         if (!authenticated) {
             const token = AuthService.getSavedToken();

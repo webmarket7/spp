@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { omit, random } from 'lodash';
+import { omit } from 'lodash';
 import { Title } from '@angular/platform-browser';
 import { User } from '../../../common/models/user.interface';
-import { UserMock } from '../../../common/mocks/user.mock';
-import { ArticleTag } from '../../../common/models/article-tag.interface';
-import { articleTagsMock } from '../../../common/mocks/article-tags.mock';
-import { fullArticlesList } from '../../../common/mocks/article.mock';
+import { GlobalService } from '../../../services/global.service';
+import { of, Subscription, SubscriptionLike } from 'rxjs';
+import { ArticlesService } from '../../../services/articles.service';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { switchMap } from 'rxjs/operators';
+import { FullArticle } from '../../../common/models/article.interface';
 
 
 @Component({
@@ -15,7 +17,7 @@ import { fullArticlesList } from '../../../common/mocks/article.mock';
     templateUrl: './article-editor.component.html',
     styleUrls: ['./article-editor.component.scss']
 })
-export class ArticleEditorComponent implements OnInit {
+export class ArticleEditorComponent implements OnInit, OnDestroy {
     mode: 'create' | 'update' = 'create';
 
     editorConfig = {
@@ -34,8 +36,8 @@ export class ArticleEditorComponent implements OnInit {
         image: ['', Validators.required]
     });
 
-    currentUser: User = new UserMock(null, 'Markus', 'Weir');
-    tags: ArticleTag[] = [];
+    currentUser: User;
+    articleIdSubscription: SubscriptionLike = Subscription.EMPTY;
 
     get header() {
         return this.mode === 'create' ? 'Create new article' : 'Edit article';
@@ -60,14 +62,36 @@ export class ArticleEditorComponent implements OnInit {
     constructor(
         private title: Title,
         private fb: FormBuilder,
-        private location: Location
+        private location: Location,
+        private activatedRoute: ActivatedRoute,
+        private globalService: GlobalService,
+        private articlesService: ArticlesService
     ) {
     }
 
     ngOnInit(): void {
         this.title.setTitle(this.header);
-        this.tags = articleTagsMock;
-        this.form.patchValue(fullArticlesList[0]);
+        this.currentUser = this.globalService.currentUser;
+
+        this.articleIdSubscription = this.activatedRoute.paramMap.pipe(
+            switchMap((paramMap: ParamMap) => {
+                const articleId = paramMap.get('articleId');
+
+                return articleId ? this.articlesService.getOne(articleId) : of(null);
+            })
+        )
+            .subscribe((article: FullArticle) => {
+                if (article) {
+                    this.mode = 'update';
+                    this.form.patchValue(article);
+                } else {
+                    this.mode = 'create';
+                }
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.articleIdSubscription.unsubscribe();
     }
 
     getTitleErrorMessage(): string {
@@ -80,9 +104,15 @@ export class ArticleEditorComponent implements OnInit {
 
     submitForm(form: FormGroup): void {
         if (form.valid) {
-            const formValue = omit(form.value, ['id']);
+            if (this.mode === 'create') {
+                const newArticle = this.articlesService.createFullArticle(omit(form.value, ['id']));
 
-            console.log({formValue});
+                this.articlesService.addOne(newArticle);
+            } else if (this.mode === 'update') {
+                this.articlesService.updateOne(form.value);
+            }
+
+            this.location.back();
         }
     }
 

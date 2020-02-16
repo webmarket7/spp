@@ -9,7 +9,7 @@
                     <article-tags [tags]='article.articleTags' limit='2'></article-tags>
                 </header>
                 <section>
-                    <a><h3>{{ article.title }}</h3></a>
+                    <a [routerLink]='["/app/articles/article", article.id]'><h3>{{ article.title }}</h3></a>
                     <br>
                     <p>{{ article.description }}</p>
                 </section>

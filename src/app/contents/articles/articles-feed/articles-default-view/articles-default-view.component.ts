@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FullArticle } from '../../../../common/models/article.interface';
-import { fullArticlesList } from '../../../../common/mocks/article.mock';
+import { ArticlesService } from '../../../../services/articles.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'articles-default-view',
@@ -8,10 +9,15 @@ import { fullArticlesList } from '../../../../common/mocks/article.mock';
     styleUrls: ['./articles-default-view.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ArticlesDefaultViewComponent {
-    articles: FullArticle[] = fullArticlesList;
+export class ArticlesDefaultViewComponent implements OnInit {
 
-    constructor() {
+    articles$: Observable<FullArticle[]>;
+
+    constructor(private articlesService: ArticlesService) {
+    }
+
+    ngOnInit(): void {
+        this.articles$ = this.articlesService.getAll();
     }
 
     trackByFn(index: number, item: FullArticle): string {

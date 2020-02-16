@@ -21,32 +21,37 @@
     <div class='article-tags-selector__dropdown' [ngClass]='currentOverlayPosition'>
         <div class='article-tags-selector__dropdown-wrapper'>
             <div class='article-tags-selector__dropdown-section'>
-                <div class='article-tags-selector__dropdown-section'>
-                    <spp-list
-                        identifier='seq'
-                        nothingFoundText='No tags found'
-                        [selectedIds]='selectedIds'
-                        [list]='tags'
-                        (selectionChange)='onSelectionChange($event)'
-                    >
-                        <ng-template let-tag>
-                            <div class='tag-list-item'>
-                                <p>{{ tag?.name }}</p>
-                                <button (click)='deleteTag($event, tag.seq)'>
-                                    <spp-icon icon='delete-trash'></spp-icon>
-                                </button>
-                            </div>
-                        </ng-template>
-                    </spp-list>
-                </div>
+                <spp-list-search
+                    placeholder='Search tags...'
+                    [formControl]='searchControl'
+                    (create)='createNewTag($event)'
+                ></spp-list-search>
             </div>
-            <div class='article-tags-selector__dropdown-separator'></div>
+            <div class='article-tags-selector__dropdown-section'>
+                <spp-list
+                    identifier='seq'
+                    nothingFoundText='No tags found'
+                    [selectedIds]='selectedIds$ | async'
+                    [list]='list$ | async'
+                    (selectionChange)='onSelectionChange($event)'
+                >
+                    <ng-template let-tag>
+                        <div class='tag-list-item'>
+                            <p>{{ tag?.name }}</p>
+                            <button (click)='deleteTag($event, tag.seq)'>
+                                <spp-icon icon='delete-trash'></spp-icon>
+                            </button>
+                        </div>
+                    </ng-template>
+                </spp-list>
+            </div>
         </div>
+        <div class='article-tags-selector__dropdown-separator'></div>
     </div>
 </ng-template>
 
 <div class='article-tags-selector__selected-list'>
-    <article-tags [tags]='selectedTags'>
+    <article-tags [tags]='selectedTags$ | async'>
         <ng-template let-context>
             <article-tag [tag]='context'>
                 <button class="delete-tag">

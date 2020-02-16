@@ -5,6 +5,7 @@ import { SppCardModule } from '../../ui/spp-card/spp-card.module';
 import { ArticleTagsModule } from '../article-tags/article-tags.module';
 import { ArticlePartsModule } from '../article-parts/article-parts.module';
 import { ArticleCardTypeDirective } from './article-card-type.directive';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { ArticleCardTypeDirective } from './article-card-type.directive';
         SppCardModule,
         ArticlePartsModule,
         ArticleTagsModule,
+        RouterModule,
     ],
     exports: [
         ArticleCardComponent,

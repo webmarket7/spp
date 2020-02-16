@@ -45,7 +45,7 @@
                     name='tagIds'
                     label='By tags'
                     optionIdKey='seq'
-                    [dataSource]='tags'
+                    [dataSource]='tags$'
         >
             <ng-template let-tag let-selected='selected'>
                 <div class='tag-list-item'>{{ tag?.name }}</div>
@@ -55,7 +55,7 @@
         <spp-filter icon='filter-by-author'
                     name='authorIds'
                     label='By author'
-                    [dataSource]='users'
+                    [dataSource]='users$'
         >
             <ng-template let-user>
                 <div class='user-list-item'>
