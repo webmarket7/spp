@@ -5,12 +5,16 @@ import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { map, startWith } from 'rxjs/operators';
 import { ArticleTag } from '../../../common/models/article-tag.interface';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { init } from 'protractor/built/launcher';
+import { filterAnimation } from '../../../common/animations';
 
 @Component({
     selector: 'spp-filter',
     templateUrl: './spp-filter.component.html',
     styleUrls: ['./spp-filter.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [filterAnimation]
 })
 export class SppFilterComponent implements OnInit {
 
