@@ -27,10 +27,8 @@ export class SppListSearchComponent implements ControlValueAccessor {
         return this.create.observers.length && this.searchTerm && this.searchTerm.length >= 3;
     }
 
-    private propagateChange = (value: string) => {
-    };
-    private propagateTouched = (event: FocusEvent) => {
-    };
+    private propagateChange = (value: string) => {};
+    private propagateTouched = (event: FocusEvent) => {};
 
     constructor() {
     }

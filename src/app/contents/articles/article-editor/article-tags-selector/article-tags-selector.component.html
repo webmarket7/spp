@@ -38,7 +38,7 @@
                     <ng-template let-tag>
                         <div class='tag-list-item'>
                             <p>{{ tag?.name }}</p>
-                            <button (click)='deleteTag($event, tag.seq)'>
+                            <button *ngIf="currentUser.id === tag._author" (click)='deleteTag($event, tag.seq)'>
                                 <spp-icon icon='delete-trash'></spp-icon>
                             </button>
                         </div>

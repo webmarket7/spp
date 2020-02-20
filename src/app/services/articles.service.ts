@@ -1,36 +1,83 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { GlobalService } from './global.service';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Article, FullArticle } from '../common/models/article.interface';
-import { fullArticlesList } from '../common/mocks/article.mock';
-import { ArticleTagsService } from './article-tags.service';
-import { ArticleTag } from '../common/models/article-tag.interface';
-import { intersectionWith } from 'lodash';
-import { generateRandomAlphanumericStr, updateItemInArray } from '../common/helpers';
+import { updateItemInArray } from '../common/helpers';
 import { map } from 'rxjs/operators';
+import { ApiService } from './api.service';
+import { ArticleParams } from '../common/models/article-params.interface';
+import { ArticleFormValue } from '../common/models/article-form-value.interface';
+import { UsersService } from './users.service';
+import { ArticleTagsService } from './article-tags.service';
+import { ArticleReactions } from '../common/models/article-reactions.inteface';
+import { ArticleReactionsService } from './article-reactions.service';
+import { omit } from 'lodash';
 
 
 @Injectable({
     providedIn: 'root'
 })
 export class ArticlesService {
-    private articlesSubject: BehaviorSubject<FullArticle[]> = new BehaviorSubject(fullArticlesList);
+
+    private endpoint = 'posts';
+    private articlesSubject: BehaviorSubject<FullArticle[]> = new BehaviorSubject([]);
 
     constructor(
-        private globalService: GlobalService,
-        private articleTagsService: ArticleTagsService) {
+        private apiService: ApiService,
+        private usersService: UsersService,
+        private articleTagsService: ArticleTagsService,
+        private articleReactionsService: ArticleReactionsService
+    ) {
+    }
+
+    getArticleReactions(article: Article): ArticleReactions {
+        return {
+            postId: article.id,
+            reactionsCounts: article.reactionsCounts,
+            reactionsAuthors: article.reactionsAuthors
+        };
+    }
+
+    getArticlesReactions(articles: Article[]): ArticleReactions[] {
+        return articles.map((article: Article) => {
+            return this.getArticleReactions(article);
+        });
     }
 
     getCurrentState(): FullArticle[] {
         return this.articlesSubject.getValue() || [];
     }
 
-    getAll(): Observable<FullArticle[]> {
+    selectArticles(): Observable<Article[]> {
         return this.articlesSubject.asObservable();
     }
 
-    getOne(articleId: string): Observable<FullArticle> {
-        return this.getAll().pipe(map((articles: FullArticle[]) => this.findOne(articles, articleId)));
+    selectFullArticles(): Observable<FullArticle[]> {
+        return combineLatest([
+            this.selectArticles(),
+            this.usersService.selectUsersDictionary(),
+            this.articleTagsService.selectArticleTagsDictionary(),
+            this.articleReactionsService.selectArticleReactionsDictionary()
+        ]).pipe(
+            map(([articles, usersDictionary, tagsDictionary, articleReactionsDictionary]) => {
+                return articles && usersDictionary && tagsDictionary
+                    ? articles.map((article: Article) => {
+                        const articleTags = article.tags.map((tagId: number) => tagsDictionary[tagId] || tagId);
+                        const reactions = articleReactionsDictionary[article.id];
+
+                        return {
+                            ...article,
+                            articleTags,
+                            articleAuthor: usersDictionary[article.author],
+                            ...(reactions && omit(reactions, 'postId'))
+                        };
+                    })
+                    : articles;
+            })
+        );
+    }
+
+    selectFullArticleById(articleId: string): Observable<FullArticle> {
+        return this.selectFullArticles().pipe(map((articles: FullArticle[]) => this.findOne(articles, articleId)));
     }
 
     findOne(articles: FullArticle[], articleId: string): FullArticle {
@@ -50,10 +97,6 @@ export class ArticlesService {
         const updatedArticle = {
             ...storedArticle,
             ...patch,
-            articleTags: intersectionWith(
-                this.articleTagsService.getCurrentState(),
-                patch.tags,
-                (tag: ArticleTag, seq: number) => +tag.seq === +seq)
         };
 
         this.articlesSubject.next(updateItemInArray(this.getCurrentState(), updatedArticle));
@@ -63,32 +106,32 @@ export class ArticlesService {
         this.articlesSubject.next(this.getCurrentState().filter((article: Article) => article.id !== articleId));
     }
 
-    createFullArticle(formValue: Partial<Article>): FullArticle {
-        return {
-            id: generateRandomAlphanumericStr(24),
-            author: this.globalService.currentUser.id,
-            tags: formValue.tags,
-            title: formValue.title,
-            description: formValue.description,
-            text: formValue.text,
-            image: 'https://picsum.photos/640/480?random=1',
-            createdAt: new Date(),
-            updatedAt: new Date(),
-            reactionsCounts: {
-                likes: 0,
-                stars: 0,
-                uni: 0,
-            },
-            reactionsAuthors: {
-                likes: [],
-                stars: [],
-                uni: [],
-            },
-            articleTags: intersectionWith(
-                this.articleTagsService.getCurrentState(),
-                formValue.tags,
-                (tag: ArticleTag, seq: number) => +tag.seq === +seq),
-            articleAuthor: this.globalService.currentUser
-        };
+    getArticles(params: ArticleParams = {page: 0}): Observable<Article[]> {
+        return this.apiService.getRequest(this.endpoint, params)
+            .pipe(
+                map(res => res.posts)
+            );
+    }
+
+    getArticleById(id: string, params = {}): Observable<Article> {
+        return this.apiService.getRequest(`${this.endpoint}/${id}`, {...params, withComments: 1});
+    }
+
+    createArticle(formValue: ArticleFormValue): Observable<Article> {
+        return this.apiService.postRequest(this.endpoint, formValue)
+            .pipe(
+                map(res => res.post)
+            );
+    }
+
+    updateArticle(id: string, formValue: ArticleFormValue): Observable<Article> {
+        return this.apiService.putRequest(`${this.endpoint}/${id}`, formValue)
+            .pipe(
+                map(res => res.post)
+            );
+    }
+
+    deleteArticle(id: string): Observable<any> {
+        return this.apiService.deleteRequest(`${this.endpoint}/${id}`);
     }
 }

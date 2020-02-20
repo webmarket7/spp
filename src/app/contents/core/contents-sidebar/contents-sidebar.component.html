@@ -3,7 +3,7 @@
 </spp-sidebar-section>
 
 <spp-sidebar-section>
-    <contents-sidebar-user [currentUser]='currentUser'></contents-sidebar-user>
+    <contents-sidebar-user [currentUser]='currentUser$ | async'></contents-sidebar-user>
 </spp-sidebar-section>
 
 <spp-sidebar-section>

@@ -1,8 +1,6 @@
-import { User } from './user.interface';
-
 export interface ArticleTag {
     seq: number;
-    author: User;
+    _author: string;
     createdAt: Date;
     name: string;
 }

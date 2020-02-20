@@ -1,5 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FullArticle } from '../../../common/models/article.interface';
+import { ArticleReactionsService } from '../../../services/article-reactions.service';
+import { ArticleReactions } from '../../../common/models/article-reactions.inteface';
+import { User } from '../../../common/models/user.interface';
 
 @Component({
     selector: 'article-card',
@@ -9,6 +12,7 @@ import { FullArticle } from '../../../common/models/article.interface';
 })
 export class ArticleCardComponent implements OnChanges {
     @Input() article: FullArticle;
+    @Input() currentUser: User;
 
     likesCount = 0;
     liked = false;
@@ -16,28 +20,46 @@ export class ArticleCardComponent implements OnChanges {
     favsCount = 0;
     favorite = false;
 
-    constructor() {}
+    constructor(
+        private articleReactionsService: ArticleReactionsService
+    ) {
+    }
 
     ngOnChanges(changes: SimpleChanges): void {
-        const { article } = changes;
+        const {article} = changes;
 
         if (article) {
             const currentValue = article.currentValue;
 
             if (currentValue) {
-                this.likesCount = currentValue.reactionsCounts.likes;
-                this.favsCount = currentValue.reactionsCounts.stars;
+                const {reactionsCounts, reactionsAuthors} = currentValue;
+
+                if (reactionsCounts) {
+                    this.likesCount = reactionsCounts.likes;
+                    this.favsCount = reactionsCounts.stars;
+                }
+
+                if (reactionsAuthors && this.currentUser) {
+                    const currentUserId = this.currentUser.id;
+
+                    this.liked = reactionsAuthors.likes.includes(currentUserId);
+                    this.favorite = reactionsAuthors.stars.includes(currentUserId);
+                }
             }
         }
     }
 
     toggleLike(): void {
-        this.liked = !this.liked;
-        this.likesCount += this.liked ? 1 : -1;
+        this.articleReactionsService.toggleReaction('likes', this.article.id)
+            .subscribe((articleReactions: ArticleReactions) => {
+                this.articleReactionsService.updateOne(articleReactions);
+            });
     }
 
     toggleFav(): void {
-        this.favorite = !this.favorite;
-        this.favsCount += this.favorite ? 1 : -1;
+        this.articleReactionsService.toggleReaction('stars', this.article.id)
+            .subscribe((articleReactions: ArticleReactions) => {
+                this.articleReactionsService.updateOne(articleReactions);
+            });
     }
 }

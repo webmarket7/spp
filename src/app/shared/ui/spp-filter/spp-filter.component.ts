@@ -61,7 +61,7 @@ export class SppFilterComponent implements OnInit {
                 : [];
         }));
 
-        this.list$ = combineLatest(this.searchControl.valueChanges.pipe(startWith('')), this.dataSource).pipe(
+        this.list$ = combineLatest([this.searchControl.valueChanges.pipe(startWith('')), this.dataSource]).pipe(
             map(([searchTerm, entities]: [string, any[]]) => {
                 return entities.filter((tag: ArticleTag) => searchTerm
                     ? RegExp(searchTerm, 'gi').test(tag.name)
