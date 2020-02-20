@@ -12,26 +12,21 @@ export class ApiService {
         private http: HttpClient
     ) {}
 
-    static prepareParams(params): HttpParams {
-        if (!params) {
-            return null;
-        }
-
-        let httpParams: HttpParams = new HttpParams();
-
-        for (const item in params) {
-            if (params.hasOwnProperty(item)) {
-                httpParams = httpParams.append(item, params[item]);
-            }
-        }
-
-        return httpParams;
+    static prepareParams(params: any): HttpParams {
+        return params ? new HttpParams({fromObject: params}) : null;
     }
 
-    static prepareOptions(params?: any, headers?: HttpHeaders) {
+    static prepareHeaders(headers: any): HttpHeaders {
+        return headers ? new HttpHeaders(headers) : null;
+    }
+
+    static prepareOptions(paramsObj?: any, headersObj?: any): {params?: HttpParams, headers?: HttpHeaders}  {
+        const params = ApiService.prepareParams(paramsObj);
+        const headers = ApiService.prepareHeaders(headersObj);
+
         return {
-            params: ApiService.prepareParams(params),
-            headers: headers || null
+            ...(params && {params}),
+            ...(headers && {headers})
         };
     }
 
@@ -39,15 +34,15 @@ export class ApiService {
         return `${environment.api}${url}`;
     }
 
-    postRequest(url: string, body, params?: any, headers?: HttpHeaders): Observable<any> {
+    postRequest(url: string, body: any, params?: any, headers?: any): Observable<any> {
         return this.http.post(this.getEndpoint(url), body, ApiService.prepareOptions(params, headers));
     }
 
-    getRequest(url: string, params?: any, headers?: HttpHeaders): Observable<any> {
+    getRequest(url: string, params?: any, headers?: any): Observable<any> {
         return this.http.get(this.getEndpoint(url), ApiService.prepareOptions(params, headers));
     }
 
-    putRequest(url: string, body, params?: any, headers?: HttpHeaders): Observable<any> {
+    putRequest(url: string, body: any, params?: any, headers?: any): Observable<any> {
         return this.http.put(this.getEndpoint(url), body, ApiService.prepareOptions(params, headers));
     }
 

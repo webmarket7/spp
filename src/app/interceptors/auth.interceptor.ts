@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { throwError } from 'rxjs';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { catchError, first, flatMap } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 
@@ -13,15 +13,26 @@ export class AuthInterceptor implements HttpInterceptor {
     constructor(private authService: AuthService) {
     }
 
-    intercept(req: HttpRequest<any>, next: HttpHandler) {
+    private handleError(errorResponse: HttpErrorResponse) {
+
+        switch (errorResponse.status) {
+            case 400:
+                alert(errorResponse.error.message);
+                break;
+
+            case 401:
+                this.authService.performSignOut();
+                break;
+        }
+
+        return throwError(errorResponse);
+    }
+
+    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return this.authService.getAuthToken().pipe(
             first(),
             flatMap((token: string) => {
                 let request = req;
-
-                request = req.clone({
-                    headers: req.headers.append('Accept', 'application/json')
-                });
 
                 if (token) {
                     request = req.clone({
@@ -30,20 +41,7 @@ export class AuthInterceptor implements HttpInterceptor {
                 }
 
                 return next.handle(request).pipe(
-                    catchError((errorResponse: HttpErrorResponse) => {
-                        const clonedError = {...errorResponse};
-                        const status = clonedError.status;
-
-                        if (status === 400) {
-                            alert(errorResponse.error.message);
-                        }
-
-                        if (status === 401) {
-                            this.authService.performSignOut();
-                        }
-
-                        return throwError(errorResponse);
-                    })
+                    catchError(this.handleError)
                 );
             })
         );

@@ -23,9 +23,8 @@ export class AuthService {
     ) {
     }
 
-    static prepareHeaders({username, password}: Credentials): HttpHeaders {
-        return new HttpHeaders()
-            .set('Authorization', 'Basic' + ' ' + btoa(`${username}:${password}`));
+    static prepareAuthorizationHeader({username, password}: Credentials): string {
+        return `Authorization: Basic ${btoa(`${username}:${password}`)}`;
     }
 
     static saveToken(token: string): void {
@@ -74,7 +73,7 @@ export class AuthService {
     }
 
     signIn(credentials: Credentials): Observable<AuthData> {
-        return this.apiService.getRequest('users/login', null, AuthService.prepareHeaders(credentials));
+        return this.apiService.getRequest('users/login', null, AuthService.prepareAuthorizationHeader(credentials));
     }
 
     signUp(credentials: Credentials): Observable<{ message: string, user: User }> {
