@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../../common/models/user.interface';
-import { GlobalService } from '../../../services/global.service';
+import { AuthService } from '../../../auth/auth.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'contents-sidebar',
@@ -9,12 +10,12 @@ import { GlobalService } from '../../../services/global.service';
 })
 export class ContentsSidebarComponent implements OnInit {
 
-    currentUser: User;
+    currentUser$: Observable<User>;
 
-    constructor(private globalService: GlobalService) {
+    constructor(private authService: AuthService) {
     }
 
     ngOnInit() {
-        this.currentUser = this.globalService.currentUser;
+        this.currentUser$ = this.authService.getCurrentUser();
     }
 }

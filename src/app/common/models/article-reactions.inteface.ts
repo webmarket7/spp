@@ -9,3 +9,9 @@ export interface ArticleReactionsAuthors {
     stars: string[];
     uni: string[];
 }
+
+export interface ArticleReactions {
+    postId: string;
+    reactionsCounts: ArticleReactionsCounts;
+    reactionsAuthors: ArticleReactionsAuthors;
+}

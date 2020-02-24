@@ -1,24 +1,33 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ArticleTag } from '../common/models/article-tag.interface';
-import { articleTagsMock } from '../common/mocks/article-tags.mock';
-import { GlobalService } from './global.service';
+import { ApiService } from './api.service';
+import { map } from 'rxjs/operators';
+import { keyBy } from 'lodash';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ArticleTagsService {
-    private articleTagsSubject: BehaviorSubject<ArticleTag[]> = new BehaviorSubject(articleTagsMock);
 
-    constructor(private globalService: GlobalService) {
+    private endpoint = 'tags';
+    private articleTagsSubject: BehaviorSubject<ArticleTag[]> = new BehaviorSubject([]);
+
+    constructor(private api: ApiService) {
     }
 
     getCurrentState(): ArticleTag[] {
         return this.articleTagsSubject.getValue() || [];
     }
 
-    getAll(): Observable<ArticleTag[]> {
+    selectArticleTags(): Observable<ArticleTag[]> {
         return this.articleTagsSubject.asObservable();
+    }
+
+    selectArticleTagsDictionary(): Observable<{ [key: number]: ArticleTag }> {
+        return this.selectArticleTags().pipe(map((articleTags: ArticleTag[]) => {
+            return keyBy(articleTags, 'seq');
+        }));
     }
 
     addAll(articleTags: ArticleTag[]): void {
@@ -33,12 +42,26 @@ export class ArticleTagsService {
         this.articleTagsSubject.next(this.getCurrentState().filter((articleTag: ArticleTag) => articleTag.seq !== articleTagId));
     }
 
-    createArticleTag(value: string): ArticleTag {
-        return {
-            seq: this.getCurrentState().length + 1,
-            author: this.globalService.currentUser,
-            createdAt: new Date(),
-            name: value
-        };
+    getAllTags(): Observable<Array<ArticleTag>> {
+        return this.api.getRequest(`${this.endpoint}/all`);
+    }
+
+    getMyTags(): Observable<Array<ArticleTag>> {
+        return this.api.getRequest(`${this.endpoint}/my`);
+    }
+
+    getTagById(id: number): Observable<ArticleTag> {
+        return this.api.getRequest(`${this.endpoint}/${id}`);
+    }
+
+    createTag(name: string): Observable<ArticleTag> {
+        return this.api.postRequest(this.endpoint, {name})
+            .pipe(
+                map(res => res.tag[0])
+            );
+    }
+
+    deleteTagById(id: number): Observable<any> {
+        return this.api.deleteRequest(`${this.endpoint}/${id}`);
     }
 }

@@ -11,10 +11,10 @@ export class SppFilterButtonComponent {
     @Input() icon: string;
     @Input() selectedFiltersCount: number;
 
-    @Output() reset: EventEmitter<void> = new EventEmitter<void>();
+    @Output() resetFilter: EventEmitter<void> = new EventEmitter<void>();
 
-    resetFilter(event: MouseEvent): void {
+    onResetFilter(event: MouseEvent): void {
         event.stopPropagation();
-        this.reset.emit();
+        this.resetFilter.emit();
     }
 }

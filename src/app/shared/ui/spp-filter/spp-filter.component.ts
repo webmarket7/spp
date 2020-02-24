@@ -5,12 +5,14 @@ import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { map, startWith } from 'rxjs/operators';
 import { ArticleTag } from '../../../common/models/article-tag.interface';
+import { filterAnimation } from '../../../common/animations';
 
 @Component({
     selector: 'spp-filter',
     templateUrl: './spp-filter.component.html',
     styleUrls: ['./spp-filter.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    animations: [filterAnimation]
 })
 export class SppFilterComponent implements OnInit {
 
@@ -61,7 +63,7 @@ export class SppFilterComponent implements OnInit {
                 : [];
         }));
 
-        this.list$ = combineLatest(this.searchControl.valueChanges.pipe(startWith('')), this.dataSource).pipe(
+        this.list$ = combineLatest([this.searchControl.valueChanges.pipe(startWith('')), this.dataSource]).pipe(
             map(([searchTerm, entities]: [string, any[]]) => {
                 return entities.filter((tag: ArticleTag) => searchTerm
                     ? RegExp(searchTerm, 'gi').test(tag.name)

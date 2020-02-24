@@ -55,9 +55,11 @@ export class SignInComponent implements OnInit {
     onSubmit(): void {
         const {email, password} = this.signInForm.value;
 
-        this.authService.signIn(
-            {username: email, password},
-            this.activatedRoute.snapshot.queryParamMap.get('redirectTo')
-        );
+        this.authService
+            .performSignIn({
+                credentials: {username: email, password},
+                redirectTo: this.activatedRoute.snapshot.queryParamMap.get('redirectTo')
+            })
+            .subscribe();
     }
 }

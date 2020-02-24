@@ -1,15 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { omit } from 'lodash';
+import { omit, random } from 'lodash';
 import { Title } from '@angular/platform-browser';
-import { User } from '../../../common/models/user.interface';
-import { GlobalService } from '../../../services/global.service';
 import { of, Subscription, SubscriptionLike } from 'rxjs';
 import { ArticlesService } from '../../../services/articles.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { FullArticle } from '../../../common/models/article.interface';
+import { Article, FullArticle } from '../../../common/models/article.interface';
 
 
 @Component({
@@ -33,10 +31,9 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
         description: ['', Validators.required],
         text: ['', Validators.required],
         tags: [[], Validators.required],
-        image: ['', Validators.required]
+        image: [`https://picsum.photos/640/480?random=${random(0, 100)}`, Validators.required]
     });
 
-    currentUser: User;
     articleIdSubscription: SubscriptionLike = Subscription.EMPTY;
 
     get header() {
@@ -55,29 +52,23 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
         return this.form.get('description');
     }
 
-    get textControl(): AbstractControl {
-        return this.form.get('text');
-    }
-
     constructor(
         private title: Title,
         private fb: FormBuilder,
         private location: Location,
         private activatedRoute: ActivatedRoute,
-        private globalService: GlobalService,
         private articlesService: ArticlesService
     ) {
     }
 
     ngOnInit(): void {
         this.title.setTitle(this.header);
-        this.currentUser = this.globalService.currentUser;
 
         this.articleIdSubscription = this.activatedRoute.paramMap.pipe(
             switchMap((paramMap: ParamMap) => {
                 const articleId = paramMap.get('articleId');
 
-                return articleId ? this.articlesService.getOne(articleId) : of(null);
+                return articleId ? this.articlesService.getArticleById(articleId) : of(null);
             })
         )
             .subscribe((article: FullArticle) => {
@@ -104,15 +95,22 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
 
     submitForm(form: FormGroup): void {
         if (form.valid) {
-            if (this.mode === 'create') {
-                const newArticle = this.articlesService.createFullArticle(omit(form.value, ['id']));
-
-                this.articlesService.addOne(newArticle);
-            } else if (this.mode === 'update') {
-                this.articlesService.updateOne(form.value);
+            switch (this.mode) {
+                case 'create':
+                    this.articlesService
+                        .createArticle(omit(form.value, ['id']))
+                        .subscribe((article: Article) => {
+                            this.articlesService.addOne(article);
+                            this.location.back();
+                        });
+                    break;
+                case 'update':
+                    this.articlesService.updateArticle(form.value.id, form.value).subscribe((article: Article) => {
+                        this.articlesService.updateOne(article);
+                        this.location.back();
+                    });
+                    break;
             }
-
-            this.location.back();
         }
     }
 

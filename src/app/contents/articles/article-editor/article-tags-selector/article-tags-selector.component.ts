@@ -1,11 +1,13 @@
-import { Component, forwardRef, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { intersectionWith } from 'lodash';
 import { ArticleTag } from '../../../../common/models/article-tag.interface';
 import { ArticleTagsService } from '../../../../services/article-tags.service';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subscription, SubscriptionLike } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
+import { AuthService } from '../../../../auth/auth.service';
+import { User } from '../../../../common/models/user.interface';
 
 
 @Component({
@@ -20,7 +22,7 @@ import { map, startWith } from 'rxjs/operators';
         }
     ]
 })
-export class ArticleTagsSelectorComponent implements OnInit, ControlValueAccessor {
+export class ArticleTagsSelectorComponent implements OnInit, OnDestroy, ControlValueAccessor {
     @HostBinding('class.disabled') isDisabled: boolean;
 
     searchControl: FormControl = this.fb.control('');
@@ -43,6 +45,9 @@ export class ArticleTagsSelectorComponent implements OnInit, ControlValueAccesso
     open = false;
     currentOverlayPosition: 'bottom' | 'top' | 'center';
 
+    currentUserSubscription: SubscriptionLike = Subscription.EMPTY;
+    currentUser: User;
+
     tags$: Observable<ArticleTag[]>;
     selectedIds: BehaviorSubject<Array<number | string>> = new BehaviorSubject([]);
     selectedIds$: Observable<Array<number | string>> = this.selectedIds.asObservable();
@@ -59,21 +64,34 @@ export class ArticleTagsSelectorComponent implements OnInit, ControlValueAccesso
 
     constructor(
         private fb: FormBuilder,
-        private articleTagsService: ArticleTagsService
+        private articleTagsService: ArticleTagsService,
+        private authService: AuthService
     ) {
     }
 
     ngOnInit(): void {
-        this.tags$ = this.articleTagsService.getAll();
-        this.list$ = combineLatest(this.searchControl.valueChanges.pipe(startWith('')), this.tags$).pipe(
+        this.articleTagsService.getAllTags()
+            .subscribe((articleTags: ArticleTag[]) => {
+                this.articleTagsService.addAll(articleTags);
+            });
+        this.currentUserSubscription = this.authService.getCurrentUser()
+            .subscribe((currentUser: User) => {
+                this.currentUser = currentUser;
+            });
+        this.tags$ = this.articleTagsService.selectArticleTags();
+        this.list$ = combineLatest([this.searchControl.valueChanges.pipe(startWith('')), this.tags$]).pipe(
             map(([searchTerm, tags]: [string, ArticleTag[]]) => {
                 return tags.filter((tag: ArticleTag) => searchTerm
                     ? RegExp(searchTerm, 'gi').test(tag.name)
                     : true);
             })
         );
-        this.selectedTags$ = combineLatest(this.tags$, this.selectedIds$)
+        this.selectedTags$ = combineLatest([this.tags$, this.selectedIds$])
             .pipe(map(([tags, selectedIds]) => ArticleTagsSelectorComponent.getSelectedTags(tags, selectedIds)));
+    }
+
+    ngOnDestroy(): void {
+        this.currentUserSubscription.unsubscribe();
     }
 
     toggleDropdown(event: MouseEvent): void {
@@ -110,14 +128,17 @@ export class ArticleTagsSelectorComponent implements OnInit, ControlValueAccesso
     }
 
     createNewTag({value}: { value: string }): void {
-        const newTag = this.articleTagsService.createArticleTag(value);
-
-        this.articleTagsService.addOne(newTag);
-        this.searchControl.reset('');
+        this.articleTagsService.createTag(value).subscribe((articleTag: ArticleTag) => {
+            this.articleTagsService.addOne(articleTag);
+            this.searchControl.reset('');
+        });
     }
 
     deleteTag(event: MouseEvent, articleTagId: number): void {
         event.stopPropagation();
-        this.articleTagsService.removeOne(articleTagId);
+        this.articleTagsService.deleteTagById(articleTagId)
+            .subscribe(() => {
+                this.articleTagsService.removeOne(articleTagId);
+            });
     }
 }

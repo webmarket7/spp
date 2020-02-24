@@ -5,7 +5,7 @@
     cdkOverlayOrigin
     #filterPaneOrigin='cdkOverlayOrigin'
     (click)='toggleDropdown($event)'
-    (reset)='resetFilter()'
+    (resetFilter)='resetFilter()'
 ></spp-filter-button>
 
 <ng-template cdkConnectedOverlay
@@ -17,7 +17,7 @@
              [cdkConnectedOverlayOpen]='open'
              (backdropClick)='onBackdropClick($event)'
 >
-    <spp-card>
+    <spp-card [@popupState]>
         <section>
             <spp-list-search
                 placeholder='Search tags...'
