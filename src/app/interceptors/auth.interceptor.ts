@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { HttpErrorResponse, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { throwError } from 'rxjs';
 import { catchError, first, flatMap } from 'rxjs/operators';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../services/auth.service';
+import { Store } from '@ngrx/store';
+import { State } from '../store';
+import { selectAuthToken } from '../store/auth/auth.selectors';
+import { signOut } from '../store/auth/auth.actions';
 
 
 @Injectable({
@@ -10,29 +14,19 @@ import { AuthService } from '../auth/auth.service';
 })
 export class AuthInterceptor implements HttpInterceptor {
 
-    constructor(private authService: AuthService) {
+    constructor(private authService: AuthService,
+                private store: Store<State>) {
     }
 
-    private handleError(errorResponse: HttpErrorResponse) {
-
-        switch (errorResponse.status) {
-            case 400:
-                alert(errorResponse.error.message);
-                break;
-
-            case 401:
-                this.authService.performSignOut();
-                break;
-        }
-
-        return throwError(errorResponse);
-    }
-
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        return this.authService.getAuthToken().pipe(
+    intercept(req: HttpRequest<any>, next: HttpHandler) {
+        return this.store.select(selectAuthToken).pipe(
             first(),
             flatMap((token: string) => {
                 let request = req;
+
+                request = req.clone({
+                    headers: req.headers.append('Accept', 'application/json')
+                });
 
                 if (token) {
                     request = req.clone({
@@ -40,7 +34,22 @@ export class AuthInterceptor implements HttpInterceptor {
                     });
                 }
 
-                return next.handle(request).pipe(catchError(this.handleError));
+                return next.handle(request).pipe(
+                    catchError((errorResponse: HttpErrorResponse) => {
+                        const clonedError = {...errorResponse};
+                        const status = clonedError.status;
+
+                        if (status === 400) {
+                            alert(errorResponse.error.message);
+                        }
+
+                        if (status === 401) {
+                            this.store.dispatch(signOut());
+                        }
+
+                        return throwError(errorResponse);
+                    })
+                );
             })
         );
     }

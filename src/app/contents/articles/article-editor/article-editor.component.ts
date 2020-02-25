@@ -1,13 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { omit, random } from 'lodash';
-import { Title } from '@angular/platform-browser';
-import { of, Subscription, SubscriptionLike } from 'rxjs';
-import { ArticlesService } from '../../../services/articles.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Title } from '@angular/platform-browser';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { of, Subscription, SubscriptionLike } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { Article, FullArticle } from '../../../common/models/article.interface';
+import { omit, random } from 'lodash';
+
+import { ArticlesService } from '../../../services/articles.service';
+import { State } from '../../../store';
+import { createArticle, editArticle } from './store/article-editor.actions';
+import { FullArticle } from '../../../store/article/article.model';
 
 
 @Component({
@@ -56,6 +60,7 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
         private title: Title,
         private fb: FormBuilder,
         private location: Location,
+        private store: Store<State>,
         private activatedRoute: ActivatedRoute,
         private articlesService: ArticlesService
     ) {
@@ -95,20 +100,15 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
 
     submitForm(form: FormGroup): void {
         if (form.valid) {
+            const formValue = omit(form.value, ['id']);
+
             switch (this.mode) {
                 case 'create':
-                    this.articlesService
-                        .createArticle(omit(form.value, ['id']))
-                        .subscribe((article: Article) => {
-                            this.articlesService.addOne(article);
-                            this.location.back();
-                        });
+                    this.store.dispatch(createArticle({formValue}));
                     break;
+
                 case 'update':
-                    this.articlesService.updateArticle(form.value.id, form.value).subscribe((article: Article) => {
-                        this.articlesService.updateOne(article);
-                        this.location.back();
-                    });
+                    this.store.dispatch(editArticle({articleId: form.value.id, formValue}));
                     break;
             }
         }

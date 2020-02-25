@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { MenuItem } from '../../../common/models/menu-item.interface';
+import { MenuItem } from '../spp-menu-item/menu-item.interface';
 
 
 @Component({

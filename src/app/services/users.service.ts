@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { User } from '../common/models/user.interface';
+import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { map } from 'rxjs/operators';
-import { keyBy } from 'lodash';
+import { User } from '../store/user/user.model';
 
 @Injectable({
     providedIn: 'root'
@@ -11,23 +10,8 @@ import { keyBy } from 'lodash';
 export class UsersService {
 
     private endpoint = 'users';
-    private usersSubject: BehaviorSubject<User[]> = new BehaviorSubject([]);
 
     constructor(private api: ApiService) {
-    }
-
-    selectAllUsers(): Observable<User[]> {
-        return this.usersSubject.asObservable();
-    }
-
-    selectUsersDictionary(): Observable<{ [key: string]: User }> {
-        return this.selectAllUsers().pipe(map((users: User[]) => {
-            return keyBy(users, 'id');
-        }));
-    }
-
-    addAll(users: User[]): void {
-        this.usersSubject.next(users);
     }
 
     getAllUsers(): Observable<Array<User>> {

@@ -71,10 +71,10 @@
 <spp-page-layout>
     <router-outlet></router-outlet>
     <div class="articles-feed__empty-list" *ngIf="!(articles$ | async).length"></div>
-<!--    <div class='articles-feed__paginator'>-->
-<!--        <button spp-button class='filled'>-->
-<!--            <spp-icon icon='download-cloud'></spp-icon>-->
-<!--            <span>Load more</span>-->
-<!--        </button>-->
-<!--    </div>-->
+    <div class='articles-feed__paginator'>
+        <button spp-button class='filled' (click)='loadMoreArticles($event)'>
+            <spp-icon icon='download-cloud'></spp-icon>
+            <span>Load more</span>
+        </button>
+    </div>
 </spp-page-layout>

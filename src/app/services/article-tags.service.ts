@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ArticleTag } from '../common/models/article-tag.interface';
-import { ApiService } from './api.service';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { keyBy } from 'lodash';
+
+import { ApiService } from './api.service';
+import { ArticleTag } from '../store/article-tag/article-tag.model';
+
 
 @Injectable({
     providedIn: 'root'
@@ -11,35 +12,8 @@ import { keyBy } from 'lodash';
 export class ArticleTagsService {
 
     private endpoint = 'tags';
-    private articleTagsSubject: BehaviorSubject<ArticleTag[]> = new BehaviorSubject([]);
 
     constructor(private api: ApiService) {
-    }
-
-    getCurrentState(): ArticleTag[] {
-        return this.articleTagsSubject.getValue() || [];
-    }
-
-    selectArticleTags(): Observable<ArticleTag[]> {
-        return this.articleTagsSubject.asObservable();
-    }
-
-    selectArticleTagsDictionary(): Observable<{ [key: number]: ArticleTag }> {
-        return this.selectArticleTags().pipe(map((articleTags: ArticleTag[]) => {
-            return keyBy(articleTags, 'seq');
-        }));
-    }
-
-    addAll(articleTags: ArticleTag[]): void {
-        this.articleTagsSubject.next(articleTags);
-    }
-
-    addOne(articleTag: ArticleTag): void {
-        this.articleTagsSubject.next([articleTag, ...this.getCurrentState()]);
-    }
-
-    removeOne(articleTagId: number): void {
-        this.articleTagsSubject.next(this.getCurrentState().filter((articleTag: ArticleTag) => articleTag.seq !== articleTagId));
     }
 
     getAllTags(): Observable<Array<ArticleTag>> {

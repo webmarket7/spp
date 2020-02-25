@@ -4,8 +4,8 @@ import { FormBuilder, FormControl } from '@angular/forms';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { map, startWith } from 'rxjs/operators';
-import { ArticleTag } from '../../../common/models/article-tag.interface';
 import { filterAnimation } from '../../../common/animations';
+import { ArticleTag } from '../../../store/article-tag/article-tag.model';
 
 @Component({
     selector: 'spp-filter',

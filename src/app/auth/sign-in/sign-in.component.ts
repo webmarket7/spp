@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { AuthService } from '../auth.service';
 import { ActivatedRoute } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { signIn } from '../../store/auth/auth.actions';
+import { Store } from '@ngrx/store';
+import { State } from '../../store';
 
 @Component({
     selector: 'sign-in',
@@ -26,7 +28,7 @@ export class SignInComponent implements OnInit {
         private title: Title,
         private fb: FormBuilder,
         private activatedRoute: ActivatedRoute,
-        private authService: AuthService
+        private store: Store<State>
     ) {
     }
 
@@ -55,11 +57,9 @@ export class SignInComponent implements OnInit {
     onSubmit(): void {
         const {email, password} = this.signInForm.value;
 
-        this.authService
-            .performSignIn({
-                credentials: {username: email, password},
-                redirectTo: this.activatedRoute.snapshot.queryParamMap.get('redirectTo')
-            })
-            .subscribe();
+        this.store.dispatch(signIn({
+            credentials: {username: email, password},
+            redirectTo: this.activatedRoute.snapshot.queryParamMap.get('redirectTo')
+        }));
     }
 }

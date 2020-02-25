@@ -1,0 +1,32 @@
+<spp-card>
+    <spp-comment-editor mode='create'
+                        [author]='currentUser'
+                        (createComment)='createComment.emit($event)'
+    ></spp-comment-editor>
+</spp-card>
+
+<div class='article-comments__wrapper' *ngIf='comments'>
+    <div class='article-comments__item' *ngFor='let comment of comments; trackBy: trackByFn'>
+        <spp-card>
+            <spp-comment-editor *ngIf='comment._id === editedCommentId; else commentCard'
+                                mode='update'
+                                [author]='comment.author'
+                                [comment]='comment'
+                                (updateComment)='onUpdateComment($event)'
+                                (cancelAction)='switchEditMode(null)'
+            ></spp-comment-editor>
+
+            <ng-template #commentCard>
+                <spp-comment
+                    [currentUser]='currentUser'
+                    [author]='comment.author'
+                    [text]='comment.text'
+                    [date]='comment.updatedAt'
+                    [readonly]='editedCommentId'
+                    (deleteComment)='deleteComment.emit({id: comment._id})'
+                    (switchEditMode)='switchEditMode(comment._id)'
+                ></spp-comment>
+            </ng-template>
+        </spp-card>
+    </div>
+</div>

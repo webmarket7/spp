@@ -1,0 +1,10 @@
+@import 'abstracts/var';
+@import 'abstracts/extends';
+
+:host {
+    max-width: 100%;
+
+    > a {
+        color: $blue;
+    }
+}

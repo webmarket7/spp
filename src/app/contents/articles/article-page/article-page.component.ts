@@ -1,18 +1,35 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Article, FullArticle } from '../../../common/models/article.interface';
-import { Observable, Subscription, SubscriptionLike } from 'rxjs';
-import { Title } from '@angular/platform-browser';
-import { ArticlesService } from '../../../services/articles.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { filter, withLatestFrom } from 'rxjs/operators';
 import { Location } from '@angular/common';
-import { ArticleReactions } from '../../../common/models/article-reactions.inteface';
-import { ArticleReactionsService } from '../../../services/article-reactions.service';
-import { User } from '../../../common/models/user.interface';
-import { ArticleTag } from '../../../common/models/article-tag.interface';
-import { UsersService } from '../../../services/users.service';
-import { ArticleTagsService } from '../../../services/article-tags.service';
-import { AuthService } from '../../../auth/auth.service';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import { Observable, Subscription, SubscriptionLike } from 'rxjs';
+import { filter, map, switchMap, withLatestFrom } from 'rxjs/operators';
+
+import { User } from '../../../store/user/user.model';
+import { Article } from '../../../store/article/article.model';
+import { ArticleTag } from '../../../store/article-tag/article-tag.model';
+import { State } from '../../../store';
+import {
+    createArticleComment,
+    deleteArticle,
+    deleteArticleComment,
+    loadArticle,
+    loadArticleComments,
+    updateArticleComment
+} from './store/article-page.actions';
+import {
+    selectArticlePageArticle,
+    selectArticlePageAuthor,
+    selectArticlePageTags,
+    selectFullArticlePageComments
+} from './store/article-page.selectors';
+import { selectCurrentUser } from '../../../store/auth/auth.selectors';
+import { selectReactionsByArticleId } from '../../../store/article-reaction/article-reactions.selectors';
+import { ArticleComment } from '../../../store/article-comment/article-comment.model';
+import { toggleArticleFav, toggleArticleLike } from '../../../store/article-reaction/article-reaction.actions';
+import { ArticleReactions } from '../../../store/article-reaction/article-reactions.model';
+
 
 @Component({
     selector: 'article-page',
@@ -21,65 +38,78 @@ import { AuthService } from '../../../auth/auth.service';
 })
 export class ArticlePageComponent implements OnInit, OnDestroy {
 
-    article$: Observable<FullArticle>;
+    article$: Observable<Article>;
     articleSubscription: SubscriptionLike = Subscription.EMPTY;
     articleId: string;
-    article: FullArticle;
+    article: Article;
 
-    users$: Observable<User[]>;
-    tags$: Observable<ArticleTag[]>;
+    articleAuthor$: Observable<User>;
+    articleTags$: Observable<ArticleTag[]>;
+    articleComments$: Observable<ArticleComment[]>;
+    currentUser$: Observable<User>;
 
+    reactionsSubscription: SubscriptionLike = Subscription.EMPTY;
     likesCount = 0;
     liked = false;
     favsCount = 0;
     favorite = false;
 
     constructor(private title: Title,
-                private articlesService: ArticlesService,
-                private authService: AuthService,
-                private usersService: UsersService,
-                private articleTagsService: ArticleTagsService,
-                private articleReactionsService: ArticleReactionsService,
+                private store: Store<State>,
                 private activatedRoute: ActivatedRoute,
                 private location: Location) {
     }
 
     ngOnInit(): void {
-        this.articleId = this.activatedRoute.snapshot.paramMap.get('articleId');
-        this.articlesService.getArticleById(this.articleId).subscribe((article: Article) => {
-            this.articlesService.addOne(article);
+        this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
+            const articleId = paramMap.get('articleId');
+
+            this.articleId = articleId;
+            this.store.dispatch(loadArticle({articleId}));
+            this.store.dispatch(loadArticleComments({articleId}));
+        });
+        this.article$ = this.store.pipe(select(selectArticlePageArticle), filter((article: Article) => !!article));
+
+        this.articleSubscription = this.article$.subscribe((article: Article) => {
+            this.article = article;
+            this.title.setTitle(article.title);
         });
 
-        this.users$ = this.usersService.selectAllUsers();
-        this.usersService.getAllUsers()
-            .subscribe((users: User[]) => {
-                this.usersService.addAll(users);
-            });
+        this.articleAuthor$ = this.store.pipe(select(selectArticlePageAuthor));
+        this.articleTags$ = this.store.pipe(select(selectArticlePageTags));
 
-        this.tags$ = this.articleTagsService.selectArticleTags();
-        this.articleTagsService.getAllTags()
-            .subscribe((articleTags: ArticleTag[]) => {
-                this.articleTagsService.addAll(articleTags);
-            });
+        this.articleComments$ = this.store.pipe(select(selectFullArticlePageComments));
+        this.currentUser$ = this.store.pipe(select(selectCurrentUser));
 
-        this.article$ = this.articlesService.selectFullArticleById(this.articleId);
-        this.articleSubscription = this.article$
-            .pipe(
-                filter((article: FullArticle) => !!article),
-                withLatestFrom(this.authService.getCurrentUser())
-            )
-            .subscribe(([article, currentUser]: [FullArticle, User]) => {
-                this.article = article;
-                this.updateReactions(article, currentUser);
-                this.title.setTitle(article.title);
-            });
+        this.reactionsSubscription = this.article$.pipe(
+            switchMap((article: Article) => {
+                return this.store.pipe(
+                    select(selectReactionsByArticleId, {articleId: article.id}),
+                    filter((articleReactions: ArticleReactions) => !!articleReactions),
+                    withLatestFrom(this.store.pipe(select(selectCurrentUser)).pipe(map((currentUser: User) => currentUser.id)))
+                );
+            })
+        ).subscribe(([articleReactions, currentUserId]: [ArticleReactions, string]) => {
+            const {reactionsCounts, reactionsAuthors} = articleReactions;
+
+            if (reactionsCounts) {
+                this.likesCount = reactionsCounts.likes;
+                this.favsCount = reactionsCounts.stars;
+            }
+
+            if (reactionsAuthors) {
+                this.liked = reactionsAuthors.likes.includes(currentUserId);
+                this.favorite = reactionsAuthors.stars.includes(currentUserId);
+            }
+        });
     }
 
     ngOnDestroy(): void {
         this.articleSubscription.unsubscribe();
+        this.reactionsSubscription.unsubscribe();
     }
 
-    updateReactions(article: FullArticle, currentUser: User) {
+    updateReactions(article: Article, currentUser: User) {
         const {reactionsCounts, reactionsAuthors} = article;
 
         if (reactionsCounts) {
@@ -96,25 +126,27 @@ export class ArticlePageComponent implements OnInit, OnDestroy {
     }
 
     toggleLike(): void {
-        this.articleReactionsService.toggleReaction('likes', this.article.id)
-            .subscribe((articleReactions: ArticleReactions) => {
-                this.articleReactionsService.updateOne(articleReactions);
-            });
+        this.store.dispatch(toggleArticleLike({articleId: this.article.id}));
     }
 
     toggleFav(): void {
-        this.articleReactionsService.toggleReaction('stars', this.article.id)
-            .subscribe((articleReactions: ArticleReactions) => {
-                this.articleReactionsService.updateOne(articleReactions);
-            });
+        this.store.dispatch(toggleArticleFav({articleId: this.article.id}));
     }
 
     deleteArticle(event: MouseEvent): void {
         event.stopPropagation();
+        this.store.dispatch(deleteArticle({articleId: this.articleId}));
+    }
 
-        this.articlesService.deleteArticle(this.articleId).subscribe(() => {
-            this.location.back();
-            this.articlesService.removeOne(this.articleId);
-        });
+    createComment(event: { text: string }): void {
+        this.store.dispatch(createArticleComment({articleId: this.article.id, formValue: event}));
+    }
+
+    updateComment({id, text}: { id: string; text: string }): void {
+        this.store.dispatch(updateArticleComment({articleId: this.article.id, commentId: id, formValue: {text}}));
+    }
+
+    deleteComment({id}: { id: string }): void {
+        this.store.dispatch(deleteArticleComment({articleId: this.article.id, commentId: id}));
     }
 }

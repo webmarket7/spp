@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { MenuItem } from '../../../../common/models/menu-item.interface';
+import { MenuItem } from '../../../../shared/ui/spp-menu-item/menu-item.interface';
 
 @Component({
     selector: 'contents-sidebar-menu',

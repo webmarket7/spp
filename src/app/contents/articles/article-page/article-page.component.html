@@ -35,11 +35,22 @@
 
         <div class='article-page__tags'>
             <h2 class='article-page__subheader'>Tags</h2>
-            <article-tags [tags]='article?.articleTags'>
+            <article-tags [tags]='articleTags$ | async'>
                 <ng-template let-context=''>
                     <article-tag [tag]='context'></article-tag>
                 </ng-template>
             </article-tags>
+        </div>
+
+        <div class='article-page__comments'>
+            <h2 class='article-page__subheader'>Comments</h2>
+            <article-comments
+                [currentUser]='currentUser$ | async'
+                [comments]='articleComments$ | async'
+                (createComment)='createComment($event)'
+                (updateComment)='updateComment($event)'
+                (deleteComment)='deleteComment($event)'
+            ></article-comments>
         </div>
     </article>
 </spp-page-layout>

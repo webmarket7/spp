@@ -1,6 +1,7 @@
 @mixin custom-material-theme($theme) {
     @include mat-form-field-theme($theme);
     @include mat-input-theme($theme);
+    @include mat-menu-theme($theme);
 }
 
 // Custom Theming for Angular Material
