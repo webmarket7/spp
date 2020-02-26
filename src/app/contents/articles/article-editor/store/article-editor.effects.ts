@@ -13,6 +13,7 @@ import { Article } from '../../../../store/article/article.model';
 import { ArticleTagsService } from '../../../../services/article-tags.service';
 import * as ArticleTagsActions from '../../../../store/article-tag/article-tag.actions';
 import { ArticleTag } from '../../../../store/article-tag/article-tag.model';
+import { MediaService } from '../../../../services/media.service';
 
 
 @Injectable()
@@ -51,16 +52,20 @@ export class ArticleEditorEffects {
     createArticle$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ArticleEditorActions.createArticle),
-            exhaustMap(({ formValue }) =>
-                this.articlesService.createArticle(formValue).pipe(
-                    switchMap((article: Article) => {
-                        return [
-                            ArticlesActions.addArticle({article}),
-                            ArticleEditorActions.createArticleSuccess({article})
-                        ];
+            exhaustMap(({ formValue }) => {
+                return this.mediaService.uploadImage(formValue.image).pipe(
+                    switchMap((image: string) => {
+                        return this.articlesService.createArticle({...formValue, image}).pipe(
+                            switchMap((article: Article) => {
+                                return [
+                                    ArticlesActions.addArticle({article}),
+                                    ArticleEditorActions.createArticleSuccess({article})
+                                ];
+                            }),
+                            catchError(error => of(ArticleEditorActions.createArticleFailure({error}))))
                     }),
-                    catchError(error => of(ArticleEditorActions.createArticleFailure({error}))))
-            )
+                );
+            })
         );
     });
 
@@ -76,16 +81,20 @@ export class ArticleEditorEffects {
     editArticle$ = createEffect(() => {
         return this.actions$.pipe(
             ofType(ArticleEditorActions.editArticle),
-            exhaustMap(({ articleId, formValue }) =>
-                this.articlesService.updateArticle(articleId, formValue).pipe(
-                    switchMap((article: Article) => {
-                        return [
-                            ArticlesActions.updateArticle({article: {id: articleId, changes: article}}),
-                            ArticleEditorActions.editArticleSuccess({article})
-                        ];
-                    }),
-                    catchError(error => of(ArticleEditorActions.editArticleFailure({error}))))
-            )
+            exhaustMap(({ articleId, formValue }) => {
+                return this.mediaService.uploadImage(formValue.image).pipe(
+                    switchMap((image: string) => {
+                        return this.articlesService.updateArticle(articleId, {...formValue, image}).pipe(
+                            switchMap((article: Article) => {
+                                return [
+                                    ArticlesActions.updateArticle({article: {id: articleId, changes: article}}),
+                                    ArticleEditorActions.editArticleSuccess({article})
+                                ];
+                            }),
+                            catchError(error => of(ArticleEditorActions.editArticleFailure({error}))))
+                    })
+                );
+            })
         );
     });
 
@@ -134,7 +143,8 @@ export class ArticleEditorEffects {
         private actions$: Actions,
         private router: Router,
         private articlesService: ArticlesService,
-        private articleTagsService: ArticleTagsService
+        private articleTagsService: ArticleTagsService,
+        private mediaService: MediaService
     ) {
     }
 }

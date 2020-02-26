@@ -33,14 +33,14 @@ export class ArticlesFeedEffects {
             ofType(ArticlesFeedActions.loadArticles),
             concatMap(({queryParams}: { queryParams: ArticleParams }) =>
                 this.articlesService.getArticles(queryParams).pipe(
-                    switchMap((articles: Article[]) => {
-                        const articlesReactions = getArticlesReactions(articles);
+                    switchMap((response: {total: number, offset: number, page: number, posts: Article[]}) => {
+                        const articlesReactions = getArticlesReactions(response.posts);
 
                         return [
-                            ArticlesActions.loadArticles({articles}),
+                            ArticlesActions.loadArticles({articles: response.posts}),
                             ArticleReactionsActions.loadArticlesReactions({articlesReactions}),
                             ArticlesFeedActions.saveArticlesFeedQueryParams({queryParams}),
-                            ArticlesFeedActions.loadArticlesSuccess({articles})
+                            ArticlesFeedActions.loadArticlesSuccess({response})
                         ];
                     }),
                     catchError(error => of(ArticlesFeedActions.loadArticlesFailure({error}))))
@@ -56,14 +56,14 @@ export class ArticlesFeedEffects {
                 const queryParams = {...lastQueryParams, page: lastQueryParams.page + 1};
 
                 return this.articlesService.getArticles(queryParams).pipe(
-                    switchMap((articles: Article[]) => {
-                        const articlesReactions = getArticlesReactions(articles);
+                    switchMap((response: {total: number, offset: number, page: number, posts: Article[]}) => {
+                        const articlesReactions = getArticlesReactions(response.posts);
 
                         return [
-                            ArticlesActions.upsertArticles({articles}),
-                            ArticleReactionsActions.loadArticlesReactions({articlesReactions}),
+                            ArticlesActions.upsertArticles({articles: response.posts}),
+                            ArticleReactionsActions.addArticlesReactions({articlesReactions}),
                             ArticlesFeedActions.saveArticlesFeedQueryParams({queryParams}),
-                            ArticlesFeedActions.loadNextArticlesBatchSuccess({articles})
+                            ArticlesFeedActions.loadNextArticlesBatchSuccess({response})
                         ];
                     }),
                     catchError(error => of(ArticlesFeedActions.loadNextArticlesBatchFailure({error}))));

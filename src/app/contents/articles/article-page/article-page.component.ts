@@ -68,7 +68,10 @@ export class ArticlePageComponent implements OnInit, OnDestroy {
             this.store.dispatch(loadArticle({articleId}));
             this.store.dispatch(loadArticleComments({articleId}));
         });
-        this.article$ = this.store.pipe(select(selectArticlePageArticle), filter((article: Article) => !!article));
+        this.article$ = this.store.pipe(
+            select(selectArticlePageArticle),
+            filter((article: Article) => !!article)
+        );
 
         this.articleSubscription = this.article$.subscribe((article: Article) => {
             this.article = article;

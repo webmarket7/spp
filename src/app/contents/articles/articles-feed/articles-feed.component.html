@@ -70,8 +70,8 @@
 
 <spp-page-layout>
     <router-outlet></router-outlet>
-    <div class="articles-feed__empty-list" *ngIf="!(articles$ | async).length"></div>
-    <div class='articles-feed__paginator'>
+    <div class="articles-feed__empty-list" *ngIf="!(articles$ | async).length && !(articlesLoading$ | async)"></div>
+    <div class='articles-feed__paginator' *ngIf='showPaginator$ | async'>
         <button spp-button class='filled' (click)='loadMoreArticles($event)'>
             <spp-icon icon='download-cloud'></spp-icon>
             <span>Load more</span>

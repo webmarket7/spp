@@ -58,7 +58,7 @@
 <ng-template #caption let-article=''>
     <div class='article-page__caption'>
         <div class='article-page__caption-section'>
-            <article-author [author]='article?.articleAuthor' size='big'></article-author>
+            <article-author [author]='articleAuthor$ | async' size='big'></article-author>
         </div>
         <div class='article-page__caption-section'>
             <spp-bordered-sections>

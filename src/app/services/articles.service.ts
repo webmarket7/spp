@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { Article, ArticleFormValue, ArticleParams } from '../store/article/article.model';
 
@@ -17,11 +17,8 @@ export class ArticlesService {
     ) {
     }
 
-    getArticles(params: ArticleParams = {page: 0}): Observable<Article[]> {
-        return this.apiService.getRequest(this.endpoint, params)
-            .pipe(
-                map(res => res.posts)
-            );
+    getArticles(params: ArticleParams = {page: 0}): Observable<{total: number, offset: number, page: number, posts: Article[]}> {
+        return this.apiService.getRequest(this.endpoint, params);
     }
 
     getArticleById(id: string, params = {}): Observable<Article> {

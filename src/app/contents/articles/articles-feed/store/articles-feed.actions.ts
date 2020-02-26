@@ -15,7 +15,7 @@ export const loadArticles = createAction(
 
 export const loadArticlesSuccess = createAction(
     '[Articles Feed] Load Articles Success',
-    props<{ articles: Article[] }>()
+    props<{ response: {total: number, offset: number, page: number, posts: Article[]} }>()
 );
 
 export const loadArticlesFailure = createAction(
@@ -29,7 +29,7 @@ export const loadNextArticlesBatch = createAction(
 
 export const loadNextArticlesBatchSuccess = createAction(
     '[Articles Feed] Next Articles Batch Successfully Loaded',
-    props<{ articles: Article[] }>()
+    props<{ response: {total: number, offset: number, page: number, posts: Article[]} }>()
 );
 
 export const loadNextArticlesBatchFailure = createAction(

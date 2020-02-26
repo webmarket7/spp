@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
@@ -35,9 +35,10 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
         description: ['', Validators.required],
         text: ['', Validators.required],
         tags: [[], Validators.required],
-        image: [`https://picsum.photos/640/480?random=${random(0, 100)}`, Validators.required]
+        image: [null, Validators.required]
     });
 
+    articleId: string;
     articleIdSubscription: SubscriptionLike = Subscription.EMPTY;
 
     get header() {
@@ -60,6 +61,7 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
         private title: Title,
         private fb: FormBuilder,
         private location: Location,
+        private router: Router,
         private store: Store<State>,
         private activatedRoute: ActivatedRoute,
         private articlesService: ArticlesService
@@ -72,6 +74,8 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
         this.articleIdSubscription = this.activatedRoute.paramMap.pipe(
             switchMap((paramMap: ParamMap) => {
                 const articleId = paramMap.get('articleId');
+
+                this.articleId = articleId;
 
                 return articleId ? this.articlesService.getArticleById(articleId) : of(null);
             })
@@ -116,6 +120,14 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
 
     onCancel(event: MouseEvent) {
         event.stopPropagation();
-        this.location.back();
+        const { navigationId } = this.location.getState() as { navigationId: number};
+
+        if (navigationId > 1) {
+            this.location.back();
+        } else {
+            const fallbackUrl = this.mode === 'create' ? ['../../'] : ['../../../article', this.articleId];
+
+            this.router.navigate(fallbackUrl, {relativeTo: this.activatedRoute});
+        }
     }
 }
