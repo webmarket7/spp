@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ArticleTag } from '../../../../common/models/article-tag.interface';
+import { ArticleTag } from '../../../../store/article-tag/article-tag.model';
 
 @Component({
     selector: 'article-tag',

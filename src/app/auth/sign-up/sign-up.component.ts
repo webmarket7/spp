@@ -1,15 +1,17 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { AuthService } from '../auth.service';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CustomValidators } from '../../common/custom-validators';
 import { Subscription, SubscriptionLike } from 'rxjs';
+import { signUp } from '../../store/auth/auth.actions';
+import { Store } from '@ngrx/store';
+import { State } from '../../store';
 
 
 @Component({
     selector: 'sign-up',
     templateUrl: './sign-up.component.html',
-    styleUrls: ['./sign-up.component.scss'],
+    styleUrls: ['./sign-up.component.scss', '../styles/auth.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignUpComponent implements OnInit, OnDestroy {
@@ -31,7 +33,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
     constructor(private title: Title,
                 private fb: FormBuilder,
-                private authService: AuthService) {
+                private store: Store<State>) {
     }
 
     ngOnInit(): void {
@@ -82,8 +84,11 @@ export class SignUpComponent implements OnInit, OnDestroy {
     onSubmit(): void {
         const {email, password} = this.signUpForm.value;
 
-        this.authService
-            .performSignUp({credentials: {username: email, password}})
-            .subscribe();
+        this.store.dispatch(signUp({
+            credentials: {
+                username: email,
+                password
+            }
+        }));
     }
 }

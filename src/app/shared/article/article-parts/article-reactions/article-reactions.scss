@@ -7,6 +7,7 @@ $reaction-active-color: $blue;
 :host {
     display: flex;
     align-items: center;
+    min-width: 32px;
 
     spp-icon {
         width: 20px;

@@ -1,13 +1,17 @@
 import { Component, forwardRef, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, FormBuilder, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ConnectedPosition } from '@angular/cdk/overlay';
-import { intersectionWith } from 'lodash';
-import { ArticleTag } from '../../../../common/models/article-tag.interface';
-import { ArticleTagsService } from '../../../../services/article-tags.service';
+import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, Observable, Subscription, SubscriptionLike } from 'rxjs';
-import { map, startWith, tap } from 'rxjs/operators';
-import { AuthService } from '../../../../auth/auth.service';
-import { User } from '../../../../common/models/user.interface';
+import { map, startWith } from 'rxjs/operators';
+import { intersectionWith } from 'lodash';
+
+import { State } from '../../../../store';
+import { User } from '../../../../store/user/user.model';
+import { ArticleTag } from '../../../../store/article-tag/article-tag.model';
+import { createTag, loadAllTags, deleteTag } from '../store/article-editor.actions';
+import { selectAllTags } from '../store/article-editor.selectors';
+import { selectCurrentUser } from '../../../../store/auth/auth.selectors';
 
 
 @Component({
@@ -51,43 +55,37 @@ export class ArticleTagsSelectorComponent implements OnInit, OnDestroy, ControlV
     tags$: Observable<ArticleTag[]>;
     selectedIds: BehaviorSubject<Array<number | string>> = new BehaviorSubject([]);
     selectedIds$: Observable<Array<number | string>> = this.selectedIds.asObservable();
-
     list$: Observable<ArticleTag[]>;
     selectedTags$: Observable<ArticleTag[]>;
 
-    static getSelectedTags(tags, selectedIds): ArticleTag[] {
-        return intersectionWith(tags, selectedIds, (tag: ArticleTag, seq: number) => +tag.seq === +seq);
-    }
-
-    private propagateChange = (value: Array<number | string>) => {};
-    private propagateTouched = (event: FocusEvent) => {};
+    private propagateChange = (value: Array<number | string>) => {
+    };
+    private propagateTouched = (event: FocusEvent) => {
+    };
 
     constructor(
         private fb: FormBuilder,
-        private articleTagsService: ArticleTagsService,
-        private authService: AuthService
+        private store: Store<State>,
     ) {
     }
 
     ngOnInit(): void {
-        this.articleTagsService.getAllTags()
-            .subscribe((articleTags: ArticleTag[]) => {
-                this.articleTagsService.addAll(articleTags);
-            });
-        this.currentUserSubscription = this.authService.getCurrentUser()
+        this.store.dispatch(loadAllTags());
+        this.tags$ = this.store.select(selectAllTags);
+        this.currentUserSubscription = this.store.select(selectCurrentUser)
             .subscribe((currentUser: User) => {
                 this.currentUser = currentUser;
             });
-        this.tags$ = this.articleTagsService.selectArticleTags();
-        this.list$ = combineLatest([this.searchControl.valueChanges.pipe(startWith('')), this.tags$]).pipe(
+
+        this.list$ = combineLatest(this.searchControl.valueChanges.pipe(startWith('')), this.tags$).pipe(
             map(([searchTerm, tags]: [string, ArticleTag[]]) => {
                 return tags.filter((tag: ArticleTag) => searchTerm
                     ? RegExp(searchTerm, 'gi').test(tag.name)
                     : true);
             })
         );
-        this.selectedTags$ = combineLatest([this.tags$, this.selectedIds$])
-            .pipe(map(([tags, selectedIds]) => ArticleTagsSelectorComponent.getSelectedTags(tags, selectedIds)));
+        this.selectedTags$ = combineLatest(this.tags$, this.selectedIds$)
+            .pipe(map(([tags, selectedIds]) => intersectionWith(tags, selectedIds, (tag: ArticleTag, seq: number) => +tag.seq === +seq)));
     }
 
     ngOnDestroy(): void {
@@ -128,17 +126,12 @@ export class ArticleTagsSelectorComponent implements OnInit, OnDestroy, ControlV
     }
 
     createNewTag({value}: { value: string }): void {
-        this.articleTagsService.createTag(value).subscribe((articleTag: ArticleTag) => {
-            this.articleTagsService.addOne(articleTag);
-            this.searchControl.reset('');
-        });
+        this.searchControl.reset('');
+        this.store.dispatch(createTag({name: value}));
     }
 
     deleteTag(event: MouseEvent, articleTagId: number): void {
         event.stopPropagation();
-        this.articleTagsService.deleteTagById(articleTagId)
-            .subscribe(() => {
-                this.articleTagsService.removeOne(articleTagId);
-            });
+        this.store.dispatch(deleteTag({articleTagId}));
     }
 }

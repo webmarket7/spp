@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { User } from '../../../common/models/user.interface';
-import { AuthService } from '../../../auth/auth.service';
 import { Observable } from 'rxjs';
+import { User } from '../../../store/user/user.model';
+import { selectCurrentUser } from '../../../store/auth/auth.selectors';
+import { select, Store } from '@ngrx/store';
+import { State } from '../../../store';
 
 @Component({
     selector: 'contents-sidebar',
@@ -12,10 +14,10 @@ export class ContentsSidebarComponent implements OnInit {
 
     currentUser$: Observable<User>;
 
-    constructor(private authService: AuthService) {
+    constructor(private store: Store<State>) {
     }
 
-    ngOnInit() {
-        this.currentUser$ = this.authService.getCurrentUser();
+    ngOnInit(): void {
+        this.currentUser$ = this.store.pipe(select(selectCurrentUser));
     }
 }

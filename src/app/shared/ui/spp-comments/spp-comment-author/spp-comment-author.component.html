@@ -1,0 +1,4 @@
+<a>
+    <spp-user-pic [picture]='author?.picture' containerSize=36></spp-user-pic>
+    <span *ngIf="!nameHidden">{{ author | userName }}</span>
+</a>

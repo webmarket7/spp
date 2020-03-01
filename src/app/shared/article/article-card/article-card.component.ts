@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FullArticle } from '../../../common/models/article.interface';
-import { ArticleReactionsService } from '../../../services/article-reactions.service';
-import { ArticleReactions } from '../../../common/models/article-reactions.inteface';
-import { User } from '../../../common/models/user.interface';
+import { Store } from '@ngrx/store';
+
+import { State } from '../../../store';
+import { toggleArticleFav, toggleArticleLike } from '../../../store/article-reaction/article-reaction.actions';
+import { User } from '../../../store/user/user.model';
+import { FullArticle } from '../../../store/article/article.model';
+
 
 @Component({
     selector: 'article-card',
@@ -21,7 +24,7 @@ export class ArticleCardComponent implements OnChanges {
     favorite = false;
 
     constructor(
-        private articleReactionsService: ArticleReactionsService
+        private store: Store<State>
     ) {
     }
 
@@ -50,16 +53,10 @@ export class ArticleCardComponent implements OnChanges {
     }
 
     toggleLike(): void {
-        this.articleReactionsService.toggleReaction('likes', this.article.id)
-            .subscribe((articleReactions: ArticleReactions) => {
-                this.articleReactionsService.updateOne(articleReactions);
-            });
+        this.store.dispatch(toggleArticleLike({articleId: this.article.id}));
     }
 
     toggleFav(): void {
-        this.articleReactionsService.toggleReaction('stars', this.article.id)
-            .subscribe((articleReactions: ArticleReactions) => {
-                this.articleReactionsService.updateOne(articleReactions);
-            });
+        this.store.dispatch(toggleArticleFav({articleId: this.article.id}));
     }
 }

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { User } from '../../../../common/models/user.interface';
+import { User } from '../../../../store/user/user.model';
 
 @Component({
     selector: 'contents-sidebar-user',

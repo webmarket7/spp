@@ -1,5 +1,4 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { Subscription } from 'rxjs';
 
 export class CustomValidators {
 
@@ -11,7 +10,7 @@ export class CustomValidators {
 
             const controlToCompare = control.root.get(controlNameToCompare);
 
-            return controlToCompare && controlToCompare.value !== control.value ? { mismatch: true } : null;
+            return controlToCompare && controlToCompare.value !== control.value ? {mismatch: true} : null;
         };
     }
 }

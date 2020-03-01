@@ -1,6 +1,6 @@
-<form [formGroup]='signInForm' class='sign-in__form' (ngSubmit)='onSubmit()'>
+<form [formGroup]='signInForm' class='auth__form' (ngSubmit)='onSubmit()'>
     <h2>Sign In</h2>
-    <mat-form-field appearance='fill' class='sign-in__form-field'>
+    <mat-form-field appearance='fill' class='auth__form-field'>
         <mat-label>Email</mat-label>
         <div matPrefix class='input-icon'>
             <spp-icon class='grey' icon='user'></spp-icon>
@@ -9,7 +9,7 @@
         <mat-hint>Your registration email</mat-hint>
         <mat-error *ngIf='emailControl.invalid'>{{ getEmailErrorMessage() }}</mat-error>
     </mat-form-field>
-    <mat-form-field appearance='fill' class='sign-in__form-field'>
+    <mat-form-field appearance='fill' class='auth__form-field'>
         <mat-label>Password</mat-label>
         <div matPrefix class='input-icon'>
             <spp-icon class='grey' icon='key'></spp-icon>
@@ -19,7 +19,7 @@
         <mat-error *ngIf='passwordControl.invalid'>{{ getPasswordErrorMessage() }}</mat-error>
     </mat-form-field>
     <button spp-button class='filled' [disabled]='signInForm.invalid'>
-        <div class='input-icon'>
+        <div class='button-icon'>
             <spp-icon icon='log-in'></spp-icon>
         </div>
         <span>Sign in</span>

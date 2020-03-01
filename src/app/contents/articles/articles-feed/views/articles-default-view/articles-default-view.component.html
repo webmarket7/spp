@@ -1,0 +1,9 @@
+<div class='article-cards__wrapper'>
+    <div class='article-card' *ngFor='let article of articles$ | async; index as i; trackBy: trackByFn'>
+        <article-card
+            [articleCardType]='i'
+            [article]='article'
+            [currentUser]='currentUser'
+        ></article-card>
+    </div>
+</div>

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { omit, keyBy } from 'lodash';
-import { ArticleReactions } from '../common/models/article-reactions.inteface';
+import { omit } from 'lodash';
+import { ArticleReactions } from '../store/article-reaction/article-reactions.model';
 
 
 @Injectable({
@@ -12,25 +12,8 @@ import { ArticleReactions } from '../common/models/article-reactions.inteface';
 export class ArticleReactionsService {
 
     private endpoint = 'reactions';
-    private articleReactionsDictionarySubject: BehaviorSubject<{[key: string]: ArticleReactions}> = new BehaviorSubject({});
 
     constructor(private api: ApiService) {
-    }
-
-    selectArticleReactionsDictionary(): Observable<{[key: string]: ArticleReactions}> {
-        return this.articleReactionsDictionarySubject.asObservable();
-    }
-
-    getCurrentState(): {[key: string]: ArticleReactions} {
-        return this.articleReactionsDictionarySubject.getValue() || {};
-    }
-
-    addAll(reactionsList: ArticleReactions[]): void {
-        this.articleReactionsDictionarySubject.next(keyBy(reactionsList, 'postId'));
-    }
-
-    updateOne(reactions: ArticleReactions): void {
-        this.articleReactionsDictionarySubject.next({...this.getCurrentState(), [reactions.postId]: reactions});
     }
 
     toggleReaction(reactionType: 'likes' | 'stars', articleId: string, withAuthorIds: 0 | 1 = 1): Observable<ArticleReactions> {

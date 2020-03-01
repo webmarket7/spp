@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { ArticleComment } from '../../../../common/models/article-comment.interface';
+import { ArticleComment } from '../../../../store/article-comment/article-comment.model';
 
 @Component({
     selector: 'article-comment-card',

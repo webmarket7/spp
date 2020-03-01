@@ -4,6 +4,8 @@ import { ArticleCommentAuthorComponent } from './article-comment-author/article-
 import { ArticleCommentEditorComponent } from './article-comment-editor/article-comment-editor.component';
 import { ArticleCommentCardComponent } from './article-comment-card/article-comment-card.component';
 import { FormsModule } from '@angular/forms';
+import { SppUserModule } from '../../ui/spp-user/spp-user.module';
+import { SppIconModule } from '../../ui/spp-icon/spp-icon.module';
 
 
 @NgModule({
@@ -14,7 +16,9 @@ import { FormsModule } from '@angular/forms';
     ],
     imports: [
         CommonModule,
-        FormsModule
+        FormsModule,
+        SppUserModule,
+        SppIconModule
     ],
     exports: [
         ArticleCommentEditorComponent,

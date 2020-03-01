@@ -2,7 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { StoreModule } from '@ngrx/store';
+import { EffectsModule } from '@ngrx/effects';
 import { EditorModule } from '@tinymce/tinymce-angular';
+
 import { ArticleEditorRoutingModule } from './article-editor-routing.module';
 import { SppCardModule } from '../../../shared/ui/spp-card/spp-card.module';
 import { MatFormFieldModule, MatInputModule } from '@angular/material';
@@ -14,6 +17,9 @@ import { ArticleTagsModule } from '../../../shared/article/article-tags/article-
 import { ArticleEditorComponent } from './article-editor.component';
 import { ArticleTagsSelectorComponent } from './article-tags-selector/article-tags-selector.component';
 import { ImageUploaderModule } from '../../../shared/ui/image-uploader/image-uploader.module';
+import { ArticleEditorEffects } from './store/article-editor.effects';
+import * as fromArticleEditor from './store/article-editor.reducer';
+
 
 @NgModule({
     declarations: [
@@ -34,7 +40,9 @@ import { ImageUploaderModule } from '../../../shared/ui/image-uploader/image-upl
         ArticleTagsModule,
         SppIconModule,
         EditorModule,
-        ImageUploaderModule
+        ImageUploaderModule,
+        StoreModule.forFeature(fromArticleEditor.articleEditorFeatureKey, fromArticleEditor.reducer),
+        EffectsModule.forFeature([ArticleEditorEffects]),
     ]
 })
 export class ArticleEditorModule {
