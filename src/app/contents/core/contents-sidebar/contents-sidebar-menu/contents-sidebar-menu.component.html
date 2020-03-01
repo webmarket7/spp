@@ -3,9 +3,10 @@
         <li *ngFor='let menuItem of menuItems; trackBy: trackByFn'>
             <a
                 spp-menu-item
-                class='active'
                 [icon]='menuItem.icon'
                 [label]='menuItem.label'
+                [routerLink]='["/app/articles"]'
+                routerLinkActive='active'
             ></a>
         </li>
     </ul>

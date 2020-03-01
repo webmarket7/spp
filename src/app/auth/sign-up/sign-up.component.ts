@@ -11,7 +11,7 @@ import { State } from '../../store';
 @Component({
     selector: 'sign-up',
     templateUrl: './sign-up.component.html',
-    styleUrls: ['./sign-up.component.scss'],
+    styleUrls: ['./sign-up.component.scss', '../styles/auth.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignUpComponent implements OnInit, OnDestroy {

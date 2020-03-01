@@ -69,8 +69,6 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.title.setTitle(this.header);
-
         this.articleIdSubscription = this.activatedRoute.paramMap.pipe(
             switchMap((paramMap: ParamMap) => {
                 const articleId = paramMap.get('articleId');
@@ -87,6 +85,8 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
                 } else {
                     this.mode = 'create';
                 }
+
+                this.title.setTitle(this.header);
             });
     }
 

@@ -9,7 +9,7 @@ import { State } from '../../store';
 @Component({
     selector: 'sign-in',
     templateUrl: './sign-in.component.html',
-    styleUrls: ['./sign-in.component.scss'],
+    styleUrls: ['./sign-in.component.scss', '../styles/auth.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignInComponent implements OnInit {

@@ -32,7 +32,7 @@ export class SppCommentComponent implements AfterViewInit, OnDestroy {
     @Input() readonly: boolean;
 
     @Output() switchEditMode: EventEmitter<void> = new EventEmitter<void>();
-    @Output() deleteComment: EventEmitter<any> = new EventEmitter<any>();
+    @Output() deleteComment: EventEmitter<void> = new EventEmitter<void>();
 
     @ViewChild('textRef', {static: false}) textRef: ElementRef<HTMLElement>;
 

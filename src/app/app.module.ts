@@ -10,7 +10,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './core/page-not-found/page-not-found.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { metaReducers, reducers } from './store';
+import { metaReducers, ROOT_REDUCERS } from './store';
 import { environment } from '../environments/environment';
 import { AuthEffects } from './store/auth/auth.effects';
 import { ArticleReactionEffects } from './store/article-reaction/article-reaction.effects';
@@ -26,7 +26,7 @@ import { ArticleReactionEffects } from './store/article-reaction/article-reactio
         BrowserAnimationsModule,
         HttpClientModule,
         AppRoutingModule,
-        StoreModule.forRoot(reducers, {
+        StoreModule.forRoot(ROOT_REDUCERS, {
             metaReducers,
             runtimeChecks: {
                 strictStateImmutability: true,
