@@ -13,7 +13,7 @@ export class SppUserPicComponent implements OnChanges {
     @HostBinding('style.width.px') @Input() containerWidth = this.defaultSize;
     @HostBinding('style.height.px') @Input() containerHeight = this.defaultSize;
 
-    @Input() containerSize = 40;
+    @Input() containerSize = this.defaultSize;
     @Input() picture: string;
     @Input() icon = 'user';
     @Input() iconSize = 24;

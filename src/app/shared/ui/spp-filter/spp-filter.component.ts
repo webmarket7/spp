@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, ContentChild, Input, OnInit, TemplateRef } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FormBuilder, FormControl } from '@angular/forms';
 import { ConnectedPosition } from '@angular/cdk/overlay';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { map, startWith } from 'rxjs/operators';
+import { startWith } from 'rxjs/operators';
 import { filterAnimation } from '../../../common/animations';
-import { ArticleTag } from '../../../store/article-tag/article-tag.model';
+import { SppFilterService } from './services/spp-filter.service';
 
 @Component({
     selector: 'spp-filter',
@@ -21,8 +20,10 @@ export class SppFilterComponent implements OnInit {
     @Input() icon: string;
     @Input() optionIdKey = 'id';
     @Input() dataSource: Observable<any[]>;
+    @Input() searchParam = 'name';
 
     searchControl: FormControl = this.fb.control('');
+
     positions: ConnectedPosition[] = [
         {
             originX: 'end',
@@ -44,42 +45,20 @@ export class SppFilterComponent implements OnInit {
 
     constructor(
         private fb: FormBuilder,
-        private activatedRoute: ActivatedRoute,
-        private router: Router
+        private sppFilterService: SppFilterService
     ) {
     }
 
+    search$: Observable<string>;
     list$: Observable<any[]>;
     selectedIds$: Observable<Array<number | string>>;
 
     @ContentChild(TemplateRef, {static: false}) listOptionTemplateRef: TemplateRef<any>;
 
     ngOnInit(): void {
-        this.selectedIds$ = this.activatedRoute.queryParamMap.pipe(map((queryParamMap: ParamMap) => {
-            const queryParamsString = queryParamMap.get(this.name);
-
-            return queryParamsString && queryParamsString.length
-                ? queryParamsString.split(this.separator)
-                : [];
-        }));
-
-        this.list$ = combineLatest([this.searchControl.valueChanges.pipe(startWith('')), this.dataSource]).pipe(
-            map(([searchTerm, entities]: [string, any[]]) => {
-                return entities.filter((tag: ArticleTag) => searchTerm
-                    ? RegExp(searchTerm, 'gi').test(tag.name)
-                    : true);
-            })
-        );
-    }
-
-    changeQueryParams(ids: Array<string | number>): void {
-        this.router.navigate([], {
-            relativeTo: this.activatedRoute,
-            queryParams: {
-                [this.name]: ids.join(this.separator) || null
-            },
-            queryParamsHandling: 'merge'
-        });
+        this.search$ = this.searchControl.valueChanges.pipe(startWith(''));
+        this.selectedIds$ = this.sppFilterService.getSelectedIds(this.name);
+        this.list$ = this.sppFilterService.getList([this.search$, this.dataSource], this.searchParam);
     }
 
     toggleDropdown(event: MouseEvent): void {
@@ -93,10 +72,10 @@ export class SppFilterComponent implements OnInit {
     }
 
     applyFilter({selectedIds}: { selectedIds: Array<number | string> }): void {
-        this.changeQueryParams(selectedIds);
+        this.sppFilterService.changeQueryParams(selectedIds, this.name, this.separator);
     }
 
     resetFilter(): void {
-        this.changeQueryParams([]);
+        this.sppFilterService.changeQueryParams([], this.name, this.separator);
     }
 }

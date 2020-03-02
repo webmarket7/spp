@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { Article, ArticleFormValue, ArticleParams } from '../store/article/article.model';
 
@@ -17,12 +17,12 @@ export class ArticlesService {
     ) {
     }
 
-    getArticles(params: ArticleParams = {page: 0}): Observable<{total: number, offset: number, page: number, posts: Article[]}> {
+    getArticles(params: ArticleParams = {page: 0}): Observable<{ total: number, offset: number, page: number, posts: Article[] }> {
         return this.apiService.getRequest(this.endpoint, params);
     }
 
-    getArticleById(id: string, params = {}): Observable<Article> {
-        return this.apiService.getRequest(`${this.endpoint}/${id}`, {...params, withComments: 1});
+    getArticleById(id: string): Observable<Article> {
+        return this.apiService.getRequest(`${this.endpoint}/${id}`);
     }
 
     createArticle(formValue: ArticleFormValue): Observable<Article> {
@@ -32,7 +32,7 @@ export class ArticlesService {
             );
     }
 
-    updateArticle(id: string, formValue: ArticleFormValue): Observable<Article> {
+    updateArticle(id: string, formValue: Partial<ArticleFormValue>): Observable<Article> {
         return this.apiService.putRequest(`${this.endpoint}/${id}`, formValue)
             .pipe(
                 map(res => res.post)

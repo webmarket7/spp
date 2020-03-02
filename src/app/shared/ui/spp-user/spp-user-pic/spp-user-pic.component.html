@@ -1,8 +1,8 @@
-<div class='spp__user-pic__wrapper' *ngIf='picture; else placeholder'>
+<div class='spp-user-pic__wrapper' *ngIf='picture; else placeholder'>
     <img [src]='picture' alt='Avatar'>
 </div>
 <ng-template #placeholder>
-    <div class='spp__user-pic__placeholder'>
+    <div class='spp-user-pic__placeholder'>
         <spp-icon
             [icon]='icon'
             [style.width.px]='iconSize'

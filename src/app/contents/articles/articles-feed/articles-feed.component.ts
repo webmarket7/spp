@@ -93,7 +93,6 @@ export class ArticlesFeedComponent implements OnInit {
         ]).pipe(map(([articlesCount, articlesTotal]: number[]) => {
             return articlesTotal > articlesCount;
         }));
-
     }
 
     loadMoreArticles(event: MouseEvent): void {

@@ -45,6 +45,7 @@
                     name='tagIds'
                     label='By tags'
                     optionIdKey='seq'
+                    searchParam='name'
                     [dataSource]='tags$'
         >
             <ng-template let-tag let-selected='selected'>
@@ -55,6 +56,7 @@
         <spp-filter icon='filter-by-author'
                     name='authorIds'
                     label='By author'
+                    searchParam='username'
                     [dataSource]='users$'
         >
             <ng-template let-user>
