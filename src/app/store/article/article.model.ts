@@ -4,10 +4,9 @@ import { ArticleReactionsAuthors, ArticleReactionsCounts } from '../article-reac
 
 export interface ArticleParams {
     page: number;
-    withComments?: 0 | 1;
-    withAuthorIds?: 0 | 1;
-    tags?: string;
+    reactionType?: 'likes' | 'stars';
     authorId?: string;
+    tags?: string;
 }
 
 export interface ArticleFormValue {
