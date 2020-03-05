@@ -1,13 +1,15 @@
-import { reducer, initialState } from './article-page.reducer';
+import { initialState, reducer } from './article-page.reducer';
 
 describe('ArticlePage Reducer', () => {
-  describe('an unknown action', () => {
-    it('should return the previous state', () => {
-      const action = {} as any;
+    describe('an unknown action', () => {
 
-      const result = reducer(initialState, action);
+        it('should return the previous state', () => {
+            const action = {} as any;
 
-      expect(result).toBe(initialState);
+            const result = reducer(initialState, action);
+
+            expect(result).toBe(initialState);
+        });
+
     });
-  });
 });

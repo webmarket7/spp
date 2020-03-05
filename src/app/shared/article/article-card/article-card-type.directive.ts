@@ -15,8 +15,8 @@ export class ArticleCardTypeDirective {
         const everySixth = seq % 6 === 0;
         const everySeventh = seq % 7 === 0;
 
-        this.listItem = first || everySixth;
-        this.tile = !first && !everySixth;
+        this.listItem = first || everySeventh;
+        this.tile = !this.listItem;
         this.wide = first || everySixth || everySeventh;
     }
 

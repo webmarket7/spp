@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    api: 'http://internship.zazmic.com/'
+    api: 'https://internship.zazmic.com/'
 };
 
 /*

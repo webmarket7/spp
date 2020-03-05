@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { select, Store } from '@ngrx/store';
@@ -56,8 +55,7 @@ export class ArticlePageComponent implements OnInit, OnDestroy {
 
     constructor(private title: Title,
                 private store: Store<State>,
-                private activatedRoute: ActivatedRoute,
-                private location: Location) {
+                private activatedRoute: ActivatedRoute) {
     }
 
     ngOnInit(): void {
@@ -68,6 +66,7 @@ export class ArticlePageComponent implements OnInit, OnDestroy {
             this.store.dispatch(loadArticle({articleId}));
             this.store.dispatch(loadArticleComments({articleId}));
         });
+
         this.article$ = this.store.pipe(
             select(selectArticlePageArticle),
             filter((article: Article) => !!article)
