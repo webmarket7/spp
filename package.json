@@ -6,7 +6,8 @@
         "start": "ng serve",
         "build": "ng build",
         "prod": "ng build --aot --prod --sourceMap=true --configuration production",
-        "test": "ng test",
+        "test": "jest",
+        "test:watch": "jest --watch",
         "lint": "ng lint",
         "e2e": "ng e2e"
     },

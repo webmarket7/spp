@@ -18,6 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class ImageUploaderComponent implements ControlValueAccessor {
 
     preview: string | ArrayBuffer;
+    propagateChange: (_: File) => {};
 
     @HostListener('dragover', ['$event']) onDragOver(event) {
         event.stopPropagation();
@@ -40,8 +41,6 @@ export class ImageUploaderComponent implements ControlValueAccessor {
         this.propagateChange(file);
     }
 
-    propagateChange = (_: File) => {};
-
     constructor() {
     }
 
@@ -55,7 +54,7 @@ export class ImageUploaderComponent implements ControlValueAccessor {
         fileReader.readAsDataURL(file);
     }
 
-    registerOnChange(fn: any): void {
+    registerOnChange(fn: (_: File) => {}): void {
         this.propagateChange = fn;
     }
 

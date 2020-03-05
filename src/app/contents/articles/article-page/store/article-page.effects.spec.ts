@@ -5,21 +5,21 @@ import { Observable } from 'rxjs';
 import { ArticlePageEffects } from './article-page.effects';
 
 describe('ArticlePageEffects', () => {
-  let actions$: Observable<any>;
-  let effects: ArticlePageEffects;
+    let actions$: Observable<any>;
+    let effects: ArticlePageEffects;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        ArticlePageEffects,
-        provideMockActions(() => actions$)
-      ]
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                ArticlePageEffects,
+                provideMockActions(() => actions$)
+            ]
+        });
+
+        effects = TestBed.get<ArticlePageEffects>(ArticlePageEffects);
     });
 
-    effects = TestBed.get<ArticlePageEffects>(ArticlePageEffects);
-  });
-
-  it('should be created', () => {
-    expect(effects).toBeTruthy();
-  });
+    it('should be created', () => {
+        expect(effects).toBeTruthy();
+    });
 });
