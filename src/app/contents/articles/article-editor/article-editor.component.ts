@@ -118,7 +118,7 @@ export class ArticleEditorComponent implements OnInit, OnDestroy {
         }
     }
 
-    onCancel(event: MouseEvent) {
+    onCancel(event: MouseEvent): void {
         event.stopPropagation();
         const { navigationId } = this.location.getState() as { navigationId: number};
 

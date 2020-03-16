@@ -47,6 +47,7 @@
         "@angular/language-service": "~8.2.14",
         "@types/node": "~8.9.4",
         "codelyzer": "^5.0.0",
+        "jest-marbles": "^2.5.1",
         "protractor": "~5.4.0",
         "ts-node": "~7.0.0",
         "tslint": "~5.15.0",

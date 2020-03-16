@@ -24,8 +24,6 @@ import { REACTION_TYPES_BY_CATEGORY } from '../../../common/constants';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ArticlesFeedComponent implements OnInit {
-    private articleFilterParams$: Observable<Partial<ArticleParams>>;
-
     category: 'all' | 'liked' | 'favorite' = 'all';
     views: MenuItem[] = [
         {
@@ -59,8 +57,12 @@ export class ArticlesFeedComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.title.setTitle('Articles Feed');
-        this.articleFilterParams$ = this.activatedRoute.queryParamMap.pipe(map((queryParamMap: ParamMap) => {
+        this.fetchData();
+        this.init();
+    }
+
+    getArticleFilterParams(): Observable<Partial<ArticleParams>> {
+        return this.activatedRoute.queryParamMap.pipe(map((queryParamMap: ParamMap) => {
             const category = normalizeQueryParam(queryParamMap.get('category'));
 
             this.category = (category || 'all') as 'all' | 'liked' | 'favorite';
@@ -74,14 +76,19 @@ export class ArticlesFeedComponent implements OnInit {
                 ...(tags && {tags})
             };
         }));
+    }
 
-        this.articleFilterParams$.subscribe((filterParams: Partial<ArticleParams>) => {
-            this.store.dispatch(loadArticles({queryParams: {page: 0, ...filterParams}}));
-        });
-
+    fetchData(): void {
         this.store.dispatch(loadArticlesAuthors());
         this.store.dispatch(loadArticlesTags());
 
+        this.getArticleFilterParams().subscribe((filterParams: Partial<ArticleParams>) => {
+            this.store.dispatch(loadArticles({queryParams: {page: 0, ...filterParams}}));
+        });
+    }
+
+    init(): void {
+        this.title.setTitle('Articles Feed');
         this.users$ = this.store.pipe(select(selectAllUsers));
         this.tags$ = this.store.pipe(select(selectAllArticleTags));
         this.articles$ = this.store.select(selectArticlesFeed);

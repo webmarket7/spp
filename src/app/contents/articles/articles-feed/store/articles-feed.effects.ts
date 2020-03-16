@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, concatMap, exhaustMap, switchMap, withLatestFrom } from 'rxjs/operators';
+import { catchError, concatMap, exhaustMap, map, switchMap, withLatestFrom } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 import { select, Store } from '@ngrx/store';
@@ -66,7 +66,8 @@ export class ArticlesFeedEffects {
                             ArticlesFeedActions.loadNextArticlesBatchSuccess({response})
                         ];
                     }),
-                    catchError(error => of(ArticlesFeedActions.loadNextArticlesBatchFailure({error}))));
+                    catchError(error => of(ArticlesFeedActions.loadNextArticlesBatchFailure({error})))
+                );
             })
         );
     });
