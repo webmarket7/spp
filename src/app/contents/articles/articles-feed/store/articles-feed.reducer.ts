@@ -31,7 +31,7 @@ const articlesFeedReducer = createReducer(
         (state) => ({...state, loading: true})
     ),
     on(ArticlesFeedActions.loadArticlesSuccess, (state, {response}) => {
-        const { posts, page, total } = response;
+        const {posts, page, total} = response;
 
         return {
             ...state,
@@ -48,7 +48,7 @@ const articlesFeedReducer = createReducer(
         (state) => ({...state, paginating: true})
     ),
     on(ArticlesFeedActions.loadNextArticlesBatchSuccess, (state, {response}) => {
-        const { posts, page, total } = response;
+        const {posts, page, total} = response;
 
         return {
             ...state,
@@ -58,7 +58,7 @@ const articlesFeedReducer = createReducer(
             paginating: false
         };
     }),
-    on(ArticlesFeedActions.loadArticlesFailure,
+    on(ArticlesFeedActions.loadNextArticlesBatchFailure,
         (state) => ({...state, loading: false})
     ),
 );
