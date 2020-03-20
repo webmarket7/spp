@@ -1,0 +1,9 @@
+<a
+    *ngFor='let view of views; trackBy: trackByFn'
+    [routerLink]='view.path'
+    queryParamsHandling='preserve'
+    [title]='view.label'
+    routerLinkActive='active'
+>
+    <spp-icon [icon]='view.icon'></spp-icon>
+</a>

@@ -1,0 +1,40 @@
+@import 'abstracts/var';
+@import 'abstracts/extends';
+
+:host {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    padding: 0 24px;
+    color: $grey;
+    cursor: pointer;
+
+
+    spp-icon {
+        color: $grey;
+    }
+
+    > span {
+        @extend %text-ellipsis;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        margin-left: 24px;
+        max-width: 100%;
+    }
+
+    &.active {
+        background-color: $blue;
+        color: $white;
+
+        spp-icon {
+            color: $white;
+        }
+    }
+
+    &:not(.active) {
+        &:hover {
+            background-color: transparentize($dark-grey, 0.9);
+        }
+    }
+}

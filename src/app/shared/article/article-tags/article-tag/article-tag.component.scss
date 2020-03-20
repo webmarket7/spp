@@ -1,0 +1,22 @@
+@import 'abstracts/var';
+@import 'abstracts/extends';
+
+:host {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    border-radius: 12px;
+    height: 24px;
+    max-width: 100%;
+    background-color: transparentize($dark-grey, 0.9);
+    transition: background-color 0.3s;
+
+    > span {
+        @extend %text-ellipsis;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 17px;
+        max-width: 100%;
+        color: $dark-grey;
+    }
+}

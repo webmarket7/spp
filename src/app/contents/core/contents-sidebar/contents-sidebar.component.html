@@ -1,0 +1,13 @@
+<spp-sidebar-section>
+    <contents-sidebar-top></contents-sidebar-top>
+</spp-sidebar-section>
+
+<spp-sidebar-section>
+    <contents-sidebar-user [currentUser]='currentUser$ | async'></contents-sidebar-user>
+</spp-sidebar-section>
+
+<spp-sidebar-section>
+    <nav contents-sidebar-menu [menuItems]="menu"></nav>
+</spp-sidebar-section>
+
+<ng-container sidebarPortalOutlet></ng-container>

@@ -1,0 +1,36 @@
+<form [formGroup]='signUpForm' class='auth__form' (ngSubmit)='onSubmit()'>
+    <h2>Sign Up</h2>
+    <mat-form-field appearance='fill' class='auth__form-field'>
+        <mat-label>Email</mat-label>
+        <div matPrefix class='input-icon'>
+            <spp-icon class='grey' icon='user'></spp-icon>
+        </div>
+        <input type='email' matInput formControlName='email'>
+        <mat-hint>Example: markus.w@gmail.com</mat-hint>
+        <mat-error *ngIf='emailControl.invalid'>{{ getEmailErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance='fill' class='auth__form-field'>
+        <mat-label>Password</mat-label>
+        <div matPrefix class='input-icon'>
+            <spp-icon class='grey' icon='key'></spp-icon>
+        </div>
+        <input type='password' matInput formControlName='password'>
+        <mat-hint>8 symbols or more</mat-hint>
+        <mat-error *ngIf='passwordControl.invalid'>{{ getPasswordErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance='fill' class='auth__form-field'>
+        <mat-label>Confirm Password</mat-label>
+        <div matPrefix class='input-icon'>
+            <spp-icon class='grey' icon='key'></spp-icon>
+        </div>
+        <input type='password' matInput formControlName='confirmPassword'>
+        <mat-hint>Repeat your password</mat-hint>
+        <mat-error *ngIf='confirmPasswordControl.invalid'>{{ getConfirmPasswordErrorMessage() }}</mat-error>
+    </mat-form-field>
+    <button spp-button class='filled' [disabled]='signUpForm.invalid'>
+        <div class='button-icon'>
+            <spp-icon icon='log-in'></spp-icon>
+        </div>
+        <span>Sign up</span>
+    </button>
+</form>

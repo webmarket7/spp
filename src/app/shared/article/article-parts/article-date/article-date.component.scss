@@ -1,0 +1,12 @@
+@import 'abstracts/var';
+@import 'abstracts/extends';
+
+:host {
+    display: block;
+    @extend %text-ellipsis;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.25;
+    color: $grey;
+    max-width: 100%;
+}

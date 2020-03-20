@@ -1,0 +1,24 @@
+<div class='spp-comment-editor__wrapper' [ngClass]='{expanded: expanded}'>
+    <header>
+        <spp-comment-author [author]='author' [nameHidden]='!expanded'></spp-comment-author>
+    </header>
+    <section>
+        <textarea
+            #textarea
+            [cdkTextareaAutosize]='expanded'
+            [formControl]='commentControl'
+            [placeholder]='expanded ? "" : "Write a comment..."'
+        ></textarea>
+    </section>
+</div>
+<footer *ngIf='expanded'>
+    <button
+        spp-button
+        class='spp-comment-editor__cancel outlined'
+        (click)='cancel($event)'>Cancel</button>
+    <button
+        spp-button
+        class='spp-comment-editor__save filled'
+        [disabled]='commentControl.invalid'
+        (click)='save($event)'>Save</button>
+</footer>

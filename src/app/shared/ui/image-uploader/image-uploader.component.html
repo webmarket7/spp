@@ -1,0 +1,12 @@
+<label
+    [ngStyle]='{backgroundImage: "url(" + preview + ")"}'
+    [class.with-preview]='preview'
+>
+    <div class="image-uploader__wrapper">
+        <spp-icon [icon]="preview ? 'upload-cloud-with-shadow' : 'upload-cloud'"></spp-icon>
+        <p><span>Drag image here</span><br>or<br>click to select</p>
+    </div>
+
+    <input type="file" accept="image/png, image/jpg, image/jpeg" (change)='onChange($event)'>
+</label>
+<p class="image-uploader__hint">png, jpg, jpeg</p>

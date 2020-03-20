@@ -1,0 +1,9 @@
+:host {
+    display: flex;
+    max-width: 100%;
+}
+
+.article-tag__wrapper {
+    margin: 4px;
+    max-width: calc(50% - 20px);
+}

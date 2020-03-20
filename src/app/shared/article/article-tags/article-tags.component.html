@@ -1,0 +1,7 @@
+<div class='article-tag__wrapper'
+     *ngFor='let tag of tags | slice: 0: limit; trackBy: trackByFn'
+     [style.maxWidth.%]='100 / (limit || 1)'
+>
+    <article-tag [tag]='tag'></article-tag>
+</div>
+

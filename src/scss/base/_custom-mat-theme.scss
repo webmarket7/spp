@@ -1,0 +1,110 @@
+@mixin custom-material-theme($theme) {
+    @include mat-form-field-theme($theme);
+    @include mat-input-theme($theme);
+    @include mat-menu-theme($theme);
+}
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+
+$spp-blue: (
+    50 : #e5f5fd,
+    100 : #bee6fb,
+    200 : #93d5f8,
+    300 : #68c4f5,
+    400 : #47b7f2,
+    500 : #27aaf0,
+    600 : #23a3ee,
+    700 : #1d99ec,
+    800 : #1790e9,
+    900 : #0e7fe5,
+    A100 : #ffffff,
+    A200 : #ddeeff,
+    A400 : #aad4ff,
+    A700 : #90c7ff,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #000000,
+        600 : #000000,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #000000,
+        A400 : #000000,
+        A700 : #000000,
+    )
+);
+
+$spp-grey: (
+    50 : #e6e6e6,
+    100 : #c1c1c1,
+    200 : #989898,
+    300 : #6f6f6f,
+    400 : #505050,
+    500 : #313131,
+    600 : #2c2c2c,
+    700 : #252525,
+    800 : #1f1f1f,
+    900 : #131313,
+    A100 : #ef6c6c,
+    A200 : #ea3e3e,
+    A400 : #f50000,
+    A700 : #db0000,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #ffffff,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+        A100 : #000000,
+        A200 : #ffffff,
+        A400 : #ffffff,
+        A700 : #ffffff,
+    )
+);
+
+$spp-primary: mat-palette($spp-blue);
+$spp-accent: mat-palette($spp-grey, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$spp-warn: mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$spp-theme: mat-light-theme($spp-primary, $spp-accent, $spp-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include custom-material-theme($spp-theme);
+
+// Define a custom typography config that overrides the font-family as well as the
+// `headlines` and `body-1` levels.
+$custom-typography: mat-typography-config(
+    $font-family: $default-font,
+    $headline: mat-typography-level(32px, 48px, 700),
+    $body-1: mat-typography-level(16px, 24px, 500)
+);
+
+// Override typography for all Angular Material, including mat-base-typography and all components.
+@include angular-material-typography($custom-typography);

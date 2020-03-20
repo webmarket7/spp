@@ -1,0 +1,26 @@
+@import 'abstracts/var';
+
+$divider: 1px solid transparentize($dark-grey, 0.85);
+
+:host {
+    display: block;
+    padding: 12px 0;
+    border-top: $divider;
+
+    &:last-of-type {
+        border-bottom: $divider;
+    }
+}
+
+.sidebar-section__header {
+    padding: 0 24px;
+
+    h3 {
+        font-weight: 500;
+        font-size: 14px;
+        color: $grey;
+        line-height: 1.5;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+    }
+}

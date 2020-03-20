@@ -1,0 +1,32 @@
+@import 'abstracts/var';
+
+:host {
+    padding: 0 15px;
+
+    > a {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        width: 40px;
+        border-radius: 4px;
+
+        spp-icon {
+            color: $grey;
+        }
+
+        &.active {
+            background-color: $blue;
+
+            spp-icon {
+                color: $white;
+            }
+        }
+
+        &:not(.active) {
+            &:hover {
+                background-color: transparentize($dark-grey, 0.9);
+            }
+        }
+    }
+}

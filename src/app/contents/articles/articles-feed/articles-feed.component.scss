@@ -1,0 +1,46 @@
+@import 'abstracts/var';
+@import 'abstracts/extends';
+
+.articles-feed {
+    &__empty-list {
+        width: 367px;
+        height: 402px;
+        background: url('../../../../assets/img/list-empty.svg') no-repeat center;
+        margin: 0 auto;
+    }
+
+    &__paginator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 40px;
+
+        > button {
+            max-width: 300px;
+            color: $white;
+
+            spp-icon {
+                color: $white;
+                margin-right: 8px;
+                width: 24px;
+                height: 24px;
+            }
+        }
+    }
+}
+
+.user-list-item {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+
+    &__name {
+        @extend %text-ellipsis;
+        margin-left: 8px;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 1.5;
+        color: $dark-grey;
+    }
+}

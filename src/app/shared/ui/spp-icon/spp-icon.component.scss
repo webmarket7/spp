@@ -1,0 +1,17 @@
+@import 'abstracts/var';
+
+$default-size: 24px;
+
+:host {
+    display: inline-block;
+    width: $default-size;
+    height: $default-size;
+    color: $grey;
+
+    svg {
+        display: inline-block;
+        width: inherit;
+        height: inherit;
+        fill: currentColor;
+    }
+}

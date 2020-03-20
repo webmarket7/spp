@@ -1,0 +1,44 @@
+@import 'abstracts/var';
+
+$search-height: 24px;
+$search-border-radius: 12px;
+$create-button-width: 91px;
+
+:host {
+    position: relative;
+    display: flex;
+    height: $search-height;
+    border-radius: $search-border-radius;
+    width: 100%;
+    padding: 0 12px;
+    background: transparentize($dark-grey, 0.96);
+
+    > input {
+        width: 100%;
+        height: inherit;
+        background-color: transparent;
+        caret-color: $blue;
+    }
+
+    > button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: $create-button-width;
+        height: $search-height;
+        border-radius: $search-border-radius;
+        background-color: $blue;
+        color: $white;
+        font-size: 14px;
+        line-height: 1.2;
+    }
+
+    &.can-create {
+        > input {
+            width: calc(100% - #{$create-button-width});
+        }
+    }
+}

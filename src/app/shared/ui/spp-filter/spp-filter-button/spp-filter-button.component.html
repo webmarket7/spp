@@ -1,0 +1,10 @@
+<div class='spp-filter-button__container'>
+    <spp-icon [icon]='icon'></spp-icon>
+    <div class='spp-filter-button__name'>
+        <span>{{ label }}</span>
+    </div>
+    <button spp-filter-counter
+            [count]='selectedFiltersCount'
+            (click)='onResetFilter($event)'
+    ></button>
+</div>

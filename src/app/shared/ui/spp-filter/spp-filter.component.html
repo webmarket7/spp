@@ -1,0 +1,45 @@
+<spp-filter-button
+    [icon]='icon'
+    [label]='label'
+    [selectedFiltersCount]='(selectedIds$ | async)?.length'
+    cdkOverlayOrigin
+    #filterPaneOrigin='cdkOverlayOrigin'
+    (click)='toggleDropdown($event)'
+    (resetFilter)='resetFilter()'
+></spp-filter-button>
+
+<ng-template cdkConnectedOverlay
+             cdkConnectedOverlayBackdropClass='transparent-backdrop'
+             [cdkConnectedOverlayHasBackdrop]='true'
+             [cdkConnectedOverlayPositions]='positions'
+             [cdkConnectedOverlayOrigin]='filterPaneOrigin'
+             [cdkConnectedOverlayFlexibleDimensions]='true'
+             [cdkConnectedOverlayOpen]='open'
+             (backdropClick)='onBackdropClick($event)'
+>
+    <spp-card [@popupState]>
+        <section>
+            <spp-list-search
+                placeholder='Search tags...'
+                [formControl]='searchControl'
+            ></spp-list-search>
+        </section>
+        <section>
+            <spp-list
+                [identifier]='optionIdKey'
+                nothingFoundText='Nothing found'
+                [selectedIds]='selectedIds$ | async'
+                [list]='list$ | async'
+                (done)='applyFilter($event)'
+            >
+                <ng-template let-item let-selected='selected'>
+                    <div class='spp-filter__option'>
+                        <ng-template
+                            [ngTemplateOutlet]='listOptionTemplateRef'
+                            [ngTemplateOutletContext]='{$implicit: item, selected: selected}'></ng-template>
+                    </div>
+                </ng-template>
+            </spp-list>
+        </section>
+    </spp-card>
+</ng-template>

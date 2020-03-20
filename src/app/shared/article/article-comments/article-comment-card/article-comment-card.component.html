@@ -1,0 +1,14 @@
+<header>
+    <div class='article-comment-card__header-block'>
+        <article-comment-author [author]='comment.author'></article-comment-author>
+    </div>
+    <div class='article-comment-card__header-block'>
+        <button>
+            <spp-icon icon='more-vertical'></spp-icon>
+        </button>
+    </div>
+</header>
+<section>{{ comment.text }}</section>
+<footer>
+    <span>{{ comment.createdAt | date: 'MMMM dd, yyyy' }}</span>
+</footer>

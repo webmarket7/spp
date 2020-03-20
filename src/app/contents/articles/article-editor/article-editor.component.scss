@@ -1,0 +1,87 @@
+@import 'abstracts/var';
+
+:host {
+    display: block;
+    width: 100%;
+}
+
+mat-form-field {
+    width: 100%;
+}
+
+form {
+    margin: 40px 0;
+}
+
+spp-card {
+    padding: 12px;
+    &:not(:last-child) {
+        margin-bottom: 32px;
+    }
+}
+
+h1 {
+    font-weight: 500;
+    font-size: 40px;
+    line-height: 50px;
+    color: $dark-grey;
+}
+
+.annotation-textarea {
+    overflow: hidden;
+}
+
+.article-editor {
+    &__controls {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        > button {
+            max-width: 300px;
+
+            &:not(:last-child) {
+                margin-bottom: 16px;
+            }
+
+            .input-icon {
+                display: flex;
+                align-items: center;
+                padding-right: 8px;
+            }
+
+            &.outlined {
+                .input-icon {
+                    spp-icon {
+                        color: $blue;
+                    }
+                }
+
+                &:hover {
+                    .input-icon {
+                        spp-icon {
+                            color: $white;
+                        }
+                    }
+                }
+            }
+
+            &.filled {
+                .input-icon {
+                    spp-icon {
+                        color: $white;
+                    }
+                }
+
+                &:disabled {
+                    .input-icon {
+                        spp-icon {
+                            color: transparentize($white, 0.4);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

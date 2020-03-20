@@ -1,0 +1,51 @@
+@import 'abstracts/var';
+
+:host {
+    position: relative;
+    width: 24px;
+    height: 24px;
+
+    &:hover {
+        .spp-filter-counter__reset {
+            display: block;
+        }
+    }
+}
+
+.spp-filter-counter {
+
+    &__count,
+    &__reset {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: inherit;
+        height: inherit;
+        background: $blue;
+        border-radius: 4px;
+    }
+
+    &__count {
+        > span {
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 1.2;
+            color: $white;
+        }
+    }
+
+    &__reset {
+        display: none;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+
+        spp-icon {
+            color: $white;
+        }
+    }
+}
+
+

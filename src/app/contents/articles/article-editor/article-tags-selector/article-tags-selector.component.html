@@ -1,0 +1,64 @@
+<button type='button'
+        class='article-tags-selector__dropdown-button'
+        [class.open]='open'
+        cdkOverlayOrigin
+        #tagsPaneOrigin='cdkOverlayOrigin'
+        (click)='toggleDropdown($event)'
+>
+    <span>Select tags</span>
+    <spp-icon icon='chevron-right'></spp-icon>
+</button>
+
+<ng-template cdkConnectedOverlay
+             cdkConnectedOverlayBackdropClass='transparent-backdrop'
+             [cdkConnectedOverlayHasBackdrop]='true'
+             [cdkConnectedOverlayPositions]='positions'
+             [cdkConnectedOverlayOrigin]='tagsPaneOrigin'
+             [cdkConnectedOverlayFlexibleDimensions]='true'
+             [cdkConnectedOverlayOpen]='open'
+             (backdropClick)='onBackdropClick($event)'
+>
+    <div class='article-tags-selector__dropdown' [ngClass]='currentOverlayPosition'>
+        <div class='article-tags-selector__dropdown-wrapper'>
+            <div class='article-tags-selector__dropdown-section'>
+                <spp-list-search
+                    placeholder='Search tags...'
+                    [formControl]='searchControl'
+                    (create)='createNewTag($event)'
+                ></spp-list-search>
+            </div>
+            <div class='article-tags-selector__dropdown-section'>
+                <spp-list
+                    identifier='seq'
+                    nothingFoundText='No tags found'
+                    [selectedIds]='selectedIds$ | async'
+                    [list]='list$ | async'
+                    (selectionChange)='onSelectionChange($event)'
+                >
+                    <ng-template let-tag>
+                        <div class='tag-list-item'>
+                            <p>{{ tag?.name }}</p>
+                            <button *ngIf="currentUser.id === tag._author" (click)='deleteTag($event, tag.seq)'>
+                                <spp-icon icon='delete-trash'></spp-icon>
+                            </button>
+                        </div>
+                    </ng-template>
+                </spp-list>
+            </div>
+        </div>
+        <div class='article-tags-selector__dropdown-separator'></div>
+    </div>
+</ng-template>
+
+<div class='article-tags-selector__selected-list'>
+    <article-tags [tags]='selectedTags$ | async'>
+        <ng-template let-context>
+            <article-tag [tag]='context'>
+                <button class="delete-tag">
+                    <spp-icon icon="close"></spp-icon>
+                </button>
+            </article-tag>
+        </ng-template>
+    </article-tags>
+</div>
+

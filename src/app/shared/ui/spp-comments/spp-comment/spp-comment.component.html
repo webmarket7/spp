@@ -1,0 +1,28 @@
+<header>
+    <div class='spp-comment__header-block'>
+        <spp-comment-author [author]='author'></spp-comment-author>
+    </div>
+    <div class='spp-comment__header-block'>
+        <button *ngIf='!readonly && author?.id === currentUser?.id' [matMenuTriggerFor]='menu'>
+            <spp-icon icon='more-vertical'></spp-icon>
+        </button>
+    </div>
+</header>
+<section #textRef [ngClass]='{collapsed: collapsed, overflown: overflown}'>{{ text }}</section>
+<footer>
+    <button [style.visibility]='overflown ? "visible" : "hidden"' (click)='toggleComment($event)'>{{ collapsed ? 'Read more' : 'Collapse' }}</button>
+    <span>{{ date | date: 'MMMM dd, yyyy' }}</span>
+</footer>
+
+<mat-menu
+    xPosition='before'
+    yPosition='below'
+    #menu='matMenu'
+>
+    <button mat-menu-item (click)='switchEditMode.emit()'>
+        <span>Edit comment</span>
+    </button>
+    <button mat-menu-item (click)='deleteComment.emit()'>
+        <span>Delete comment</span>
+    </button>
+</mat-menu>
