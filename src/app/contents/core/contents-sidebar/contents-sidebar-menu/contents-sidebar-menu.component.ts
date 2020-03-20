@@ -1,21 +1,16 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MenuItem } from '../../../../shared/ui/spp-menu-item/menu-item.interface';
 
 @Component({
-    selector: 'contents-sidebar-menu',
+    // tslint:disable-next-line:component-selector
+    selector: 'nav[contents-sidebar-menu]',
     templateUrl: './contents-sidebar-menu.component.html',
     styleUrls: ['./contents-sidebar-menu.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContentsSidebarMenuComponent {
 
-    menuItems: MenuItem[] = [
-        {
-            label: 'Articles',
-            icon: 'newspaper',
-            path: 'articles'
-        }
-    ];
+    @Input() menuItems: MenuItem[];
 
     constructor() {
     }

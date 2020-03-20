@@ -63,12 +63,11 @@ export class ArticlesFeedComponent implements OnInit {
 
     getArticleFilterParams(): Observable<Partial<ArticleParams>> {
         return this.activatedRoute.queryParamMap.pipe(map((queryParamMap: ParamMap) => {
+            const authorId = normalizeQueryParam(queryParamMap.get('authorIds'));
+            const tags = normalizeQueryParam(queryParamMap.get('tagIds'));
             const category = normalizeQueryParam(queryParamMap.get('category'));
 
             this.category = (category || 'all') as 'all' | 'liked' | 'favorite';
-
-            const authorId = normalizeQueryParam(queryParamMap.get('authorIds'));
-            const tags = normalizeQueryParam(queryParamMap.get('tagIds'));
 
             return {
                 ...(category && category !== 'all' && {reactionType: REACTION_TYPES_BY_CATEGORY[category]}),
