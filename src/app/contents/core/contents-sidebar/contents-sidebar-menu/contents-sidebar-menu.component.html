@@ -1,13 +1,8 @@
-<nav>
-    <ul>
-        <li *ngFor='let menuItem of menuItems; trackBy: trackByFn'>
-            <a
-                spp-menu-item
-                [icon]='menuItem.icon'
-                [label]='menuItem.label'
-                [routerLink]='["/app/articles"]'
-                routerLinkActive='active'
-            ></a>
-        </li>
-    </ul>
-</nav>
+<a
+    *ngFor='let menuItem of menuItems; trackBy: trackByFn'
+    spp-menu-item
+    [icon]='menuItem.icon'
+    [label]='menuItem.label'
+    [routerLink]='menuItem.path'
+    routerLinkActive='active'
+></a>

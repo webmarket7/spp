@@ -15,7 +15,7 @@ export class SppSidebarPortalOutletDirective implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.sidebarPortalService.getPortal()
+        this.portalSubscription = this.sidebarPortalService.getPortal()
             .subscribe((templateRef: TemplateRef<any>) => {
                 if (templateRef) {
                     this.viewContainerRef.createEmbeddedView(templateRef);

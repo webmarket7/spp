@@ -18,7 +18,7 @@ $gutter-width: 40px;
 
     &:first-child,
     &:nth-child(6n),
-    &:nth-child(6n + 1) {
+    &:nth-child(7n) {
         width: 100%;
         max-width: 100%;
     }
